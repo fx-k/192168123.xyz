@@ -1,12 +1,10 @@
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fxiaojundebug%2Fxiaojun.im)
-
-# xiaojun.im
+# 192168123.xyz
 
 [English](./README.md) • [中文](./README.zh-CN.md)
 
 我的个人博客，由 Next.js、TypeScript、MDX 和 TailwindCSS 构建。
 
-👀 [在线预览](https://xiaojun.im/)
+👀 [在线预览](https://192168123.xyz/)
 
 ## 特色
 
