@@ -65,7 +65,7 @@ const DesktopHeader: React.FC<{ menus: { label: string; href: string }[] }> = ({
   const [{ x: spotX, y: spotY, r: spotR }, onMouseMove] = useSpotlight()
 
   return (
-    <div className="prose-container flex items-center justify-between h-[80px]">
+    <div className="prose-container flex items-center justify-between h-[80px] bg-white dark:bg-black">
       <Link href="/">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img

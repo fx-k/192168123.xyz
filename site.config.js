@@ -1,10 +1,10 @@
 module.exports = {
   name: '小可の聚集地',
-  title: 'The site of Mr.Ke.',
+  title: '小可の聚集地',
   description: '欲买桂花同载酒，终不似，少年游。',
   avatar: '/avatar.png',
   logo: '/logo.svg',
-  siteUrl: 'https://www.xiaojun.im',
+  siteUrl: 'https://192168123.xyz',
   // icon 请在 src/components/Profile.tsx 中修改
   links: [
     { name: 'GitHub', link: 'https://github.com/xiaojundebug' },
@@ -30,7 +30,7 @@ module.exports = {
   outdatedPostThresholdDays: 90,
   markdown: {
     // 统一配置 CodeBlock 是否显示行号，也可以在 frontmatter 中通过 lineNumbers 字段单独设置
-    lineNumbers: false,
+    lineNumbers: true,
   },
   backToTopButton: true
 }
