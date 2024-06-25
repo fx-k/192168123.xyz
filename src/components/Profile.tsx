@@ -44,8 +44,8 @@ const Profile = () => {
           {/* <span className="inline-block mt-3 text-zinc-500">{config.description}</span> */}
           <span className="inline-block mt-3 text-zinc-500">
             <Typewriter
-              words={config.description_typing}
-              loop={0}
+              words={config.description_typing.map(value => ({ value, sort: Math.random() })).sort((a, b) => a.sort - b.sort).map(({ value }) => value)}
+              // loop={0}
               cursor
               cursorStyle='_'
               typeSpeed={170}
