@@ -1,13 +1,13 @@
 module.exports = {
-  name: '小可の聚集地',
+  name: 'Mr.Ke',
   title: '小可の聚集地',
-  description: '欲买桂花同载酒，终不似，少年游。',
+  description: '🌹可以永远期待一切的双向奔赴',
   avatar: '/avatar.png',
   logo: '/logo.svg',
   siteUrl: 'https://192168123.xyz',
   // icon 请在 src/components/Profile.tsx 中修改
   links: [
-    { name: 'GitHub', link: 'https://github.com/xiaojundebug' },
+    { name: 'GitHub', link: 'https://github.com/fx-k' },
     { name: 'X', link: 'https://twitter.com/xiaojundebug' },
     { name: '稀土掘金', link: 'https://juejin.cn/user/3386151543772328' },
     { name: 'RSS', link: '/feed.xml' },

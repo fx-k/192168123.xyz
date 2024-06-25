@@ -2,6 +2,12 @@ import React from 'react'
 import config from 'config'
 import Image from 'next/image'
 import { GitHub, Juejin, RSS, X } from './icons'
+import { Ma_Shan_Zheng } from '@next/font/google'
+
+const ma_Shan_Zheng = Ma_Shan_Zheng({
+  weight: '400',
+  subsets: ['latin']
+})
 
 const links: { name: string; link: string }[] = config.links
 
@@ -31,7 +37,7 @@ const Profile = () => {
           </div>
         )}
         <div className="ml-6">
-          <h1 className="w-fit text-3xl font-medium text-primary bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
+          <h1 className={`${ma_Shan_Zheng.className} w-fit text-3xl font-medium text-primary bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent`}>
             {config.title}
           </h1>
           <span className="inline-block mt-3 text-zinc-500">{config.description}</span>
