@@ -2,7 +2,8 @@ import React from 'react'
 import config from 'config'
 import Image from 'next/image'
 import { GitHub, Juejin, RSS, X } from './icons'
-import { Ma_Shan_Zheng } from '@next/font/google'
+import { Ma_Shan_Zheng } from 'next/font/google'
+import { Typewriter } from 'nextjs-simple-typewriter'
 
 const ma_Shan_Zheng = Ma_Shan_Zheng({
   weight: '400',
@@ -40,7 +41,17 @@ const Profile = () => {
           <h1 className={`${ma_Shan_Zheng.className} w-fit text-3xl font-medium text-primary bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent`}>
             {config.title}
           </h1>
-          <span className="inline-block mt-3 text-zinc-500">{config.description}</span>
+          {/* <span className="inline-block mt-3 text-zinc-500">{config.description}</span> */}
+          <span className="inline-block mt-3 text-zinc-500">
+            <Typewriter
+              words={config.description_typing}
+              loop={0}
+              cursor
+              cursorStyle='_'
+              typeSpeed={170}
+              deleteSpeed={50}
+              delaySpeed={1000}
+            /></span>
           <div className="flex items-center -mx-2 mt-1">
             {links.map(({ name, link }) => (
               <a

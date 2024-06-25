@@ -1,7 +1,13 @@
 module.exports = {
   name: 'Mr.Ke',
   title: '小可の聚集地',
-  description: '🌹可以永远期待一切的双向奔赴',
+  description: '小可之地！！！',
+  description_typing: [
+    "🌹可以永远期待一切的双向奔赴...",
+    "虚心学习🙏🙏争取向大佬迈进...",
+    "Coding for sth new... 😎",
+    "🧐Debug the world...",
+  ],
   avatar: '/avatar.png',
   logo: '/logo.svg',
   siteUrl: 'https://192168123.xyz',
