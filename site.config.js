@@ -1,6 +1,6 @@
 module.exports = {
-  name: 'Xiaojun Zhou',
-  title: 'Xiaojun Zhou',
+  name: '小可の聚集地',
+  title: 'The site of Mr.Ke.',
   description: '欲买桂花同载酒，终不似，少年游。',
   avatar: '/avatar.png',
   logo: '/logo.svg',
