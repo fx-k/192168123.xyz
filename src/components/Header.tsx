@@ -65,57 +65,59 @@ const DesktopHeader: React.FC<{ menus: { label: string; href: string }[] }> = ({
   const [{ x: spotX, y: spotY, r: spotR }, onMouseMove] = useSpotlight()
 
   return (
-    <div className="prose-container flex items-center justify-between h-[80px] bg-white dark:bg-black">
-      <Link href="/">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          className="inline-block h-[18px] mr-4 cursor-pointer dark:invert"
-          src={config.logo}
-          alt="logo"
-        />
-      </Link>
-      <nav>
-        <ul
-          className="group flex items-center px-3 ring-1 ring-zinc-900/5 dark:ring-zinc-100/10 rounded-full bg-gradient-to-b from-zinc-50/70 to-white/70 dark:from-zinc-900/70 dark:to-zinc-800/70 backdrop-blur backdrop-saturate-200 shadow-lg shadow-zinc-800/5"
-          onMouseMove={onMouseMove}
-        >
-          {/* Spotlight overlay */}
-          <animated.div
-            className="pointer-events-none absolute -inset-px rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-primary/[0.12]"
-            style={{
-              background: to(
-                [spotX, spotY, spotR],
-                (x, y, r) =>
-                  `radial-gradient(${r}px circle at ${x}px ${y}px, currentColor 0%, transparent 65%)`,
-              ),
-            }}
-            aria-hidden
-          ></animated.div>
-          {menus.map(menu => (
-            <li key={menu.href}>
-              <Link
-                className={clsx(
-                  'relative block py-2 px-3 font-medium text-sm hover:text-primary transition-colors',
-                  {
-                    'text-primary': pathname === menu.href,
-                  },
-                )}
-                href={menu.href}
-              >
-                {menu.label}
-                <span
+    <div className="bg-white/85 dark:bg-black/85">
+      <div className="prose-container flex items-center justify-between h-[80px]">
+        <Link href="/">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="inline-block h-[18px] mr-4 cursor-pointer dark:invert"
+            src={config.logo}
+            alt="logo"
+          />
+        </Link>
+        <nav>
+          <ul
+            className="group flex items-center px-3 ring-1 ring-zinc-900/5 dark:ring-zinc-100/10 rounded-full bg-gradient-to-b from-zinc-50/70 to-white/70 dark:from-zinc-900/70 dark:to-zinc-800/70 backdrop-blur backdrop-saturate-200 shadow-lg shadow-zinc-800/5"
+            onMouseMove={onMouseMove}
+          >
+            {/* Spotlight overlay */}
+            <animated.div
+              className="pointer-events-none absolute -inset-px rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-primary/[0.12]"
+              style={{
+                background: to(
+                  [spotX, spotY, spotR],
+                  (x, y, r) =>
+                    `radial-gradient(${r}px circle at ${x}px ${y}px, currentColor 0%, transparent 65%)`,
+                ),
+              }}
+              aria-hidden
+            ></animated.div>
+            {menus.map(menu => (
+              <li key={menu.href}>
+                <Link
                   className={clsx(
-                    'absolute inset-x-1 -bottom-px h-px bg-gradient-to-r from-primary/0 via-primary/40 dark:via-primary/60 to-primary/0 transition-opacity',
-                    { 'opacity-0': pathname !== menu.href },
-                    { 'opacity-100': pathname === menu.href },
+                    'relative block py-2 px-3 font-medium text-sm hover:text-primary transition-colors',
+                    {
+                      'text-primary': pathname === menu.href,
+                    },
                   )}
-                ></span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
-      <DarkModeToggle />
+                  href={menu.href}
+                >
+                  {menu.label}
+                  <span
+                    className={clsx(
+                      'absolute inset-x-1 -bottom-px h-px bg-gradient-to-r from-primary/0 via-primary/40 dark:via-primary/60 to-primary/0 transition-opacity',
+                      { 'opacity-0': pathname !== menu.href },
+                      { 'opacity-100': pathname === menu.href },
+                    )}
+                  ></span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <DarkModeToggle />
+      </div>
     </div>
   )
 }
