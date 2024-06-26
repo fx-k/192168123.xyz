@@ -21,14 +21,13 @@ export default async function Home() {
       <div className="prose-container">
         <Profile />
         <p className="mt-4 break-words leading-loose">
-          你好 👋，我是一个前端开发人员（2017 ～ 至今），从事于直播行业，工作地在杭州。
+          Hiya 👋，这里是小可。
         </p>
         <p className="mt-4 break-words leading-loose">
-          我一直对前端开发怀着浓厚的兴趣和热忱，同时也持续关注着设计领域的动态与发展，让我感到兴奋的一些事情包括
-          CSS、设计风格、动效、打造出色的组件 API、以及让界面更加生动有趣。
+          本是个开<Link className="underline decoration-sky-500" href="bhttps://mc.fxit.top/" target="_blank">MC服</Link>出身的腐竹🤔意外间打开了CS领域的大门，并开始在前后端及计网运维等领域<a className='line-through'>摸爬滚打</a>😳...后来，有幸正式成为了科班出生的计机人，目前已经是个准硕士研究生😎
         </p>
         <p className="mt-4 break-words leading-loose">
-          除此之外我还痴迷于提高个人生产力，我认为同样一个设备或 App 在我手中总能变得更好用 😎。
+          Yep，正如本站logo所示，<Link className="underline decoration-pink-500" href="https://www.fxit.top/" target="_blank">FXIT</Link>是我的小工作室。一些内容相比于放在工作室官网，我更乐于将它发布在不那么官方的场合，比如<a className="underline decoration-wavy decoration-indigo-500/50">小可の聚集地</a>。
         </p>
         <Title text={t('home-page.posts.title')} />
         <LatestPosts />

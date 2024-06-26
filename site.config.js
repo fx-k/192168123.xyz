@@ -14,8 +14,8 @@ module.exports = {
   // icon 请在 src/components/Profile.tsx 中修改
   links: [
     { name: 'GitHub', link: 'https://github.com/fx-k' },
-    { name: 'X', link: 'https://twitter.com/xiaojundebug' },
-    { name: '稀土掘金', link: 'https://juejin.cn/user/3386151543772328' },
+    { name: 'Telegram', link: 'https://t.me/Mone_J' },
+    { name: 'Mail', link: 'mailto:admin@fxit.top' },
     { name: 'RSS', link: '/feed.xml' },
   ],
   friends: [
