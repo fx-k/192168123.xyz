@@ -18,7 +18,7 @@ const BleedThroughImage: React.FC<BleedThroughImageProps> = props => {
     <div
       className="relative"
       style={{
-        ...(fit ? { aspectRatio: `${width} / ${height}` } : { width, height }),
+        ...(fit ? { aspectRatio: `16/9` } : { width, height }),
       }}
     >
       <DesktopOnly>
@@ -44,6 +44,7 @@ const BleedThroughImage: React.FC<BleedThroughImageProps> = props => {
         unoptimized
         placeholder="blur"
         blurDataURL={lqip}
+        style={{objectFit: "cover"}}
       />
       <DesktopOnly>
         <div className="absolute inset-px ring-1 ring-zinc-400/10 rounded-[23px] pointer-events-none"></div>
