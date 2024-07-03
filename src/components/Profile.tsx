@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { GitHub, Telegram, Mail, RSS } from './icons'
 import { Ma_Shan_Zheng } from 'next/font/google'
 import { Typewriter } from 'nextjs-simple-typewriter'
+import { shuffle } from 'lodash';
 
 const ma_Shan_Zheng = Ma_Shan_Zheng({
   weight: '400',
@@ -44,7 +45,7 @@ const Profile = () => {
           {/* <span className="inline-block mt-3 text-zinc-500">{config.description}</span> */}
           <span className="inline-block mt-3 text-zinc-500">
             <Typewriter
-              words={config.description_typing.map(value => ({ value, sort: Math.random() })).sort((a, b) => a.sort - b.sort).map(({ value }) => value)}
+              words={shuffle(config.description_typing)}
               // loop={0}
               cursor
               cursorStyle='_'
