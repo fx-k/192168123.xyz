@@ -19,6 +19,9 @@
 
   "friends-page.title": "朋友们",
   "friends-page.desc": "共 {{ count }} 个友链",
+  "friends-page.desc2": "乱序哒！刷新即可重新排序~",
+
+  "friends_invalid-page.title": "下面 {{ count }} 个小伙伴失踪啦!",
 
   "code.copy": "复制",
   "code.copied": "✓ 已复制"

@@ -12,6 +12,7 @@ module.exports = {
   logo: '/logo.svg',
   siteUrl: 'https://192168123.xyz',
   // icon 请在 src/components/Profile.tsx 中修改
+  getFaviconAPI: 'https://api.vwood.xyz/v1/Favicon/public?domain=',
   links: [
     { name: 'GitHub', link: 'https://github.com/fx-k' },
     { name: 'Telegram', link: 'https://t.me/Mone_J' },
@@ -19,12 +20,16 @@ module.exports = {
     { name: 'RSS', link: '/feed.xml' },
   ],
   friends: [
-    { name: '赖同学', link: 'https://www.laibh.com' },
-    { name: '鯊手', link: 'https://www.cnblogs.com/Scooby' },
-    { name: '戴兜', link: 'https://im.daidr.me' },
-    { name: 'lufangzhou', link: 'https://zhoufanglu.github.io/vuepressBlog' },
-    { name: 'wallleap', link: 'https://myblog.wallleap.cn' },
-    { name: 'Song\'s Blog', link: 'https://songxwn.com' },
+    { name: '维基萌', link: 'http://www.wikimoe.com/' },
+    { name: 'OMG的博客', link: 'https://ohmyga.cn/' },
+  ],
+  friends_invalid: [
+    { name: '遇见心流', link: 'http://yujianxinliu.com/' },
+    { name: '苍灵冥梦', link: 'https://moe.do/' },
+    { name: '矢澤にこ', link: 'https://blog.ni-co.moe/' },
+    { name: '树洞', link: 'https://aoaoao.me/' },
+    { name: '久伴博客', link: 'https://jiub.ren/' },
+    { name: 'Sonic853', link: 'http://blog.853lab.com/' },
   ],
   // en | zh-CN
   language: 'zh-CN',

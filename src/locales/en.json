@@ -19,6 +19,9 @@
 
   "friends-page.title": "Friends",
   "friends-page.desc": "{{ count }} friends in total",
+  "friends-page.desc2": "Shuffle order when refreshing :)",
+
+  "friends_invalid-page.title": "{{ count }} invalid link in total",
 
   "code.copy": "Copy",
   "code.copied": "Copied!"
