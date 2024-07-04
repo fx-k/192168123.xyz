@@ -39,14 +39,15 @@ yarn-error.log*
 
 # 个人隐私文件
 .env
-posts/*
-!posts/2023-04-27-mdx-syntax-guide.mdx
-!posts/2023-04-27-mdx-syntax-basic.mdx
-!posts/2023-04-27-mdx-syntax-code-block.mdx
-!posts/2023-04-27-mdx-syntax-admonitions.mdx
-!posts/2023-04-27-mdx-syntax-third-party-embeds.mdx
-!posts/2023-04-27-mdx-syntax-code-playground.mdx
-!posts/2023-04-27-mdx-syntax-math-equations.mdx
+# posts/*
+posts/tmp/*
+# !posts/2023-04-27-mdx-syntax-guide.mdx
+# !posts/2023-04-27-mdx-syntax-basic.mdx
+# !posts/2023-04-27-mdx-syntax-code-block.mdx
+# !posts/2023-04-27-mdx-syntax-admonitions.mdx
+# !posts/2023-04-27-mdx-syntax-third-party-embeds.mdx
+# !posts/2023-04-27-mdx-syntax-code-playground.mdx
+# !posts/2023-04-27-mdx-syntax-math-equations.mdx
 src/post-helpers
 public/images/*
 !public/images/test-hero-image.webp
