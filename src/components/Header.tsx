@@ -185,7 +185,7 @@ const Header = () => {
         (barStyles, item) =>
           item && (
             <animated.div
-              className="fixed w-full h-[50px] sm:h-[80px] top-0 z-30"
+              className="w-full h-[50px] sm:h-[80px] top-0 z-30"
               style={barStyles}
             >
               <MobileOnly>
