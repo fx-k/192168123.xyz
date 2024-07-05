@@ -13,6 +13,7 @@ import PostContent from './PostContent'
 import PostRightAside from './PostRightAside'
 import PostOutdatedAlert from './PostOutdatedAlert'
 import { Heading } from '@/components/TableOfContents'
+import ArtalkComment from '@/components/ArtalkComment'
 
 export interface PostPageProps {
   slug: string
@@ -125,6 +126,10 @@ const PostPage: React.FC<PostPageProps> = props => {
 
             <HorizontalRule />
 
+            <ArtalkComment />
+
+            <HorizontalRule />
+            
             {config.adjacentPosts && (
               <div className="my-16 flex justify-between space-x-6 sm:space-x-12 sm:text-lg font-medium">
                 {/* 上一篇 */}
