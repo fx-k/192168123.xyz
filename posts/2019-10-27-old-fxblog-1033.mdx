@@ -1,0 +1,101 @@
+---
+title: "【PocketMine-MP】Linux开服常见问题解决"
+date: '2019-10-27T01:02:57Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2019-10-27T01:04:29Z'
+raw_comment_count: '0'
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=1033](https://blog.fxit.top/?p=1033)
+:::
+
+:::warning
+注意，该文章排版可能存在兼容问题，建议配合旧版本博客食用~
+:::
+
+最近博主在一台Centos7服务器上使用pocketmine搭建MinecraftBE服务器的时候，出现了一些问题，折腾了半天找了许多资料也算是解决了。
+
+下面简要整理记录一下pocketmine开服常见的错误解决办法（转载）：
+## 1./lib64/libm.so.6 GLIBC_2.15 not found in xxxxx
+只需要执行下列指令：
+```
+wget http://copr-be.cloud.fedoraproject.org/results/mosquito/myrepo-el6/epel-6-x86_64/glibc-2.17-55.fc20/glibc-2.17-55.el6.x86_64.rpm
+wget http://copr-be.cloud.fedoraproject.org/results/mosquito/myrepo-el6/epel-6-x86_64/glibc-2.17-55.fc20/glibc-common-2.17-55.el6.x86_64.rpm
+wget http://copr-be.cloud.fedoraproject.org/results/mosquito/myrepo-el6/epel-6-x86_64/glibc-2.17-55.fc20/glibc-devel-2.17-55.el6.x86_64.rpm
+wget http://copr-be.cloud.fedoraproject.org/results/mosquito/myrepo-el6/epel-6-x86_64/glibc-2.17-55.fc20/glibc-headers-2.17-55.el6.x86_64.rpm
+sudo rpm -Uvh glibc-2.17-55.el6.x86_64.rpm
+glibc-common-2.17-55.el6.x86_64.rpm
+glibc-devel-2.17-55.el6.x86_64.rpm
+glibc-headers-2.17-55.el6.x86_64.rpm
+```
+## 2. libmvec.so.1: cannot open shared object file: no such file or directory
+这个问题不少人都遇到过，而且更新到了最新版本的pmmp的php-binary如果系统是纯净的一定会遇到。
+
+根据简单的搜索，就可以知道libmvec.so.1首次出现在glibc_2.22版本。
+
+如果你的系统内核足够新的话可以尝试一下core安装，这里就不多说，我们这里说的是没有新内核怎么办
+
+一、如果你系统是CentOS6.x，那请先升级到CentOS7.x，避免后面出现更加麻烦的问题。（例如Linux version is too old，所以还不如直接升级CentOS版本）
+
+二、yum install gcc gcc-c++ textinfo makefile ，并且等待yum的安装完成
+
+三、我们先升级Glibc到2.25
+
+先下载一下这个编译库：wget [http://ftp.gnu.org/gnu/glibc/glibc-2.25.tar.gz](http://ftp.gnu.org/gnu/glibc/glibc-2.25.tar.gz)
+
+然后解压缩：`tar xvzf glibc-2.25.tar.gz`
+
+进入目录：`cd glibc-2.25`
+
+建立一个好让gcc编译程序有地方可以输出的东西：`mkdir build`
+
+进入目录： `cd build`
+
+给予编译选项：`../configure –prefix=/usr –disable-profile –enable-add-ons –with-headers=/usr/include –with-binutils=/usr/bin`
+
+为了防止编译过程中有什么鬼问题：` make -i`
+
+最后 `make install -i`
+## 3./usr/lib/libstdc++.so.6: version CXXABI_1.3.9′ not found/usr/lib64/libstdc++.so.6: version GLIBCXX_3.4.21′ not found
+解决方法也很简单。有点常识的人（没有也不要紧）就知道libstdc++.so.6是gcc的软链接
+
+都说到这个份上了，大家理解了吧，升级gcc版本。
+
+顺便
+```
+wget [http://ftp.gnu.org/gnu/gcc/gcc-6.1.0/gcc-6.1.0.tar.bz2](http://ftp.gnu.org/gnu/gcc/gcc-6.1.0/gcc-6.1.0.tar.bz2)
+
+tar -jxvf gcc-6.1.0.tar.bz2
+
+cd gcc-6.1.0
+
+./contrib/download_prerequisites
+
+mkdir build
+
+cd build
+
+../configure -enable-checking=release -enable-languages=c,c++ -disable-multilib
+
+make
+
+make install
+```
+就这样。
+
+然后重新做软链接。
+```
+cd /lib64
+
+rm -f libstdc++.so.6
+```
+然后搜索你下你刚才安装的去哪里了：`find / -name “libstdc++.*”`
+
+之后cp 文件目录 `/usr/lib64`
+
+最后` ln -s libstdc++.so.6 你的东西/你的PM目录/bin/php7/lib/`
+。
+&nbsp;

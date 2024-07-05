@@ -1,0 +1,80 @@
+---
+title: "解决vestacp面板使用wordpress伪静态的问题~"
+date: '2017-03-04T16:17:49Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2019-01-12T16:50:54Z'
+raw_comment_count: '3'
+image: https://oss.192168123.xyz/image/old-fxblog-img/cover/b0a10eb97335941d198d5b384d4db158.jpg
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=634](https://blog.fxit.top/?p=634)
+:::
+
+前言：
+
+vestacp新坑又来了~
+
+博主来更博客求关注辣~
+
+博主在本次将要介绍的就是vestacp面板使用伪静态的方法和vestacp面板使用伪静态不生效的原因及解决办法~
+
+<hr />
+
+Part1：vestacp面板使用伪静态
+
+据博主所知，vestacp面板是自带了伪静态的模版了的，表面上看起来是方便了站长，但是呢，只能说bug挺多，而且对于国人来使用vestacp这个面板来说，这些模版并不是很适合（当然，是可以更改的，说个题外话吧，具体更改的文件在 `/usr/local/vesta/data/templates/web/nginx/php-fpm`中，stpl是ssl的模版，tpl是普通的模版，这个大家应该也不会闲着没事改这个，博主没研究过，也只是提一提，不详细说了。）
+
+所以，vestacp面板要使用伪静态，就得在配置文件中更改。
+
+这里特别说一说，博主用的vestacp自定义安装，是nginx+php的结构，大家用apache的也可以借鉴一下本教程。
+
+由于博主的是nginx，修改配置文件，目录在  `/home/admin/conf/web/nginx.conf` 。打开，下载到本地用notepad++打开或者ssh vi、vim ,打开文件搜索你的域名，博主的是\:blog.fxit.top ，这里就搜索“blog.fxit.top”，然后找到server主机头（就是配置文件开头的那里），在`location / {`中加入wordpress的伪静态配置，这里有个很方便的伪静态规则：
+`try_files $uri $uri/ /index.php?$args; `
+
+不懂的看一下完整的location /部分的配置，如下：
+```bash
+location / {
+
+location ~* ^.+\.(jpeg|jpg|png|gif|bmp|ico|svg|css|js)$ {
+expires max;
+}
+
+location ~ [^/]\.php(/|$) {
+fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+if (!-f $document_root$fastcgi_script_name) {
+return 404;
+}
+
+fastcgi_pass 内网ip：端口;
+fastcgi_index index.php;
+include /etc/nginx/fastcgi_params;
+}
+
+try_files $uri $uri/ /index.php?$args;
+}
+```
+
+然后重启vestacp面板及nginx，一般的就成功了~
+```bash
+service vesta restart
+service nginx restart
+```
+
+<hr />
+
+Part2：使用ssl的网站会导致伪静态不生效的问题
+
+博主按照上面的方法，折腾了好几次，百度了n次，以为是伪静态规则有问题，但是始终未能解决。
+
+静下心想一想，发现里面还有一个snginx.conf文件，是不是和这个文件有关呢，于是博主按照上面的方法把伪静态规则也加入这个文件，重启，成功!
+
+这是由于vestacp这个面板使用ssl的话，会分成两个配置文件，nginx.conf是存放普通网站（即没有使用ssl的网站）的配置的，snginx.conf是存放开启了ssl网站的配置文件的，两个配置文件使用的端口不一样，而且配置也是分别的，需要在snginx.conf也加入伪静态规则，这样才能成功~
+
+<hr />
+
+以上，教程结束，一点心得。
+
+欢迎在下方留言处冒个泡~欢迎关注繁星博客~~

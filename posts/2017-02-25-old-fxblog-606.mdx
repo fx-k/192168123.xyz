@@ -1,0 +1,33 @@
+---
+title: "wordpress上传图片到媒体库出现http错误的解决方法"
+date: '2017-02-25T22:07:48Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2017-02-25T22:14:10Z'
+raw_comment_count: '2'
+image: https://oss.192168123.xyz/image/old-fxblog-img/cover/d69265a5dd6546bcbb799f1e2e810974.jpg
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=606](https://blog.fxit.top/?p=606)
+:::
+
+最近开始更点博客了，突然发现wordpress上传图片出现问题了，等了n久然后出现了：http错误 这样的提示。
+
+刚开始以为是我的远程附件插件又出啥毛病了，于是测试了很久都找不出远程服务器有啥问题。突然想起最近刚刚重装换的面板，估计是这里出毛病了，于是又开始入坑了。。。。
+
+<hr />
+
+根据博主多年来入的坑，应该是权限不够。。。于是跑去chmod777。。。。改完之后问题依旧，看来不是这个问题了。于是翻了翻百度，得到一点灵感，估计是刚搬的主机没有gd库导致的，博主用的centos，输入yum install php-gd，然后service restart，再次失败。于是看到了某站的一个方法，貌似是屏蔽错误啥的（忘了），代码就是如下，博主试了然后重启之后，出坑成功！
+```php
+/**解决上传图片出现http错误*/
+add_filter( 'wp_image_editors', 'change_graphic_lib' );
+function change_graphic_lib($array) {
+  return array( 'WP_Image_Editor_GD', 'WP_Image_Editor_Imagick' );
+}
+```
+
+<hr />
+
+以上，一次小问题的解决方法，记录在博客里，给各位遇到这个问题的朋友尝试一下，有时候也方便自己翻一翻//= =//。。

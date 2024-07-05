@@ -1,0 +1,162 @@
+---
+title: "使用PRIMO组件，让你的硬盘快几倍！"
+date: '2018-10-04T13:36:51Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2018-10-04T14:14:46Z'
+raw_comment_count: '0'
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=844](https://blog.fxit.top/?p=844)
+:::
+
+<strong>PrimoCache和PrimoRamdisk是功能十分强大的工具，那么：</strong>
+
+1、PrimoRamdisk会占用你的物理内存来充当你的存储磁盘
+
+2、PrimoCache会使用你的SSD和内存来提高你本机硬盘的L1/L2缓存区的速度，从而加速系统
+
+3、这两个应用占用极小，可以放心使用
+&nbsp;
+
+下载链接在文章末尾。
+
+<hr />
+
+加速原理具体解析：
+
+1.PrimoRamdisk是一个将物理内存转化为一个虚拟硬盘的东西。简单来说，就是将内存分一部分当硬盘来用。
+
+2.而PrimoCache，是一个用来提高你物理硬盘的L1/L2缓存区大小的东西。
+
+L1缓存区只能使用物理内存来提高，简单来说就是将物理内存分一部分给物理硬盘的L1缓存。众所周知，物理内存的速度绝对是比ssd快得多，所以说分一点用来提升L1缓存区大小，实际上就是给L1缓存区加速了。
+
+L2缓存区只能使用硬盘来提高。一般是用你另外一条的ssd（建议使用高端的PCI-E通道SSD效果显著）分一部分（或者全部）用于提高L2缓存区的大小。众所周知，SSD速度也是很快的，用于提升L2缓存区大小，实际上也是提升了L2缓存区的速度。当然，ssd的速度肯定不及物理内存。所以，1.里面说的PrimoRamdisk就是用来将物理内存分一部分当硬盘用的东西。如果将两者配合，也就是用PrimoRamdisk把一部分内存转化为虚拟硬盘然后将这个虚拟硬盘在PrimoCache中当作为L2缓存区的硬盘使用，就可以实现L1和L2的缓存区全部使用物理内存来提升，这样一来岂不美哉233?
+
+弊端：
+
+1.会占用你的物理内存（占用大小由你分的大小来决定）。
+
+2.会消耗你的物理内存寿命（增加了写入量等），不过由于大多数人来说，物理内存实际上可以看作寿命是无限的，你根本用不到那个时候。虽然DDR4内存目前很贵啊，不过还是不需要太过于考虑物理内存寿命的问题。
+
+3.如果使用SSD来加速L2，就会消耗SSD的寿命。这个就值得注意了，垃圾的SSD可能写入量一大就掉速之类的。不过，消耗一个SSD来提升另外一个SSD的寿命，这种买卖也算是值得的吧。我想你也不会太在意这个。
+
+4.目前有些网友反应，扩展L2缓存区，可能会有一些bug，就比如说L2掉缓存的问题。所以博主建议，一般使用物理内存分大一点提升L1就足够了，L2可以提高读的速度而不提高写的速度。
+
+5.还有，因为物理内存大家都知道，断电的话数据就没有了。所以，台式机不建议使用物理内存来提升L1/L2缓存区的写入速度（读取是没有风险的）。因为一断电，可能数据未来得及写入就丢失了，如果用ssd来提升还好，因为断电ssd数据还能找回。如果断电丢失的话，可能会导致系统文件的丢失，蓝屏之类的东西。特别特别是数据盘。我建议不要用物理内存来提升（甚至说不要提升）。
+
+6.原理限制，可能导致提升后的硬盘速度不稳定，甚至导致读取速度比以前慢（这种情况建议分多一点）。不过呢，总体来说体验肯定还是要比原来好的（2333），速度不稳的情况你提升之后使用AS SSD跑一下你就知道了。
+
+<hr />
+
+特别声明！！！
+
+本博客提供的破解软件来源于互联网，如有侵权请联系博主删除。
+
+破解软件，仅限于测试使用，不允许用于商业活动！
+
+由于是破解软件，请在下载后24小时内删除，维护开发者权益！
+
+希望有能力的小伙伴大力支持一下正版，毕竟开发者也不容易！
+
+打击盗版，支持正版，从我做起！
+
+（下载即表示已同意本声明）
+
+<hr />
+
+嗯，请大家确保已经仔细阅读上面内容，本教程有一定风险，带来的后果本博客概不负责~~~
+
+那么，教程开始：
+
+一、安装&amp;破解
+
+1.下载好博主提供的zip，解压，如图：
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/d52b9ec072d5088ed3cd6fbd255fb1c7.png" alt="TIM截图20181004122708" width="741" height="231" />
+
+2.分别安装两个原版安装包，记住不要改安装路径，直接默认，一直点下一步直到安装完成即可。
+
+注意：先安装Primo.Ramdisk.Srv.Mui.Setup.5.7.0.exe，再安装PrimoCache.Mui.Setup.3.0.2.exe。安装完PrimoCache.Mui.Setup.3.0.2.exe之后必须要重启！！！
+
+3.安装并且重启完成后，看到桌面已经有两个软件的快捷方式了。分别进行破解 替换启动器操作：单击快捷方式，右键选择“打开文件所在的位置”，将之前下载的“PrimoCacheCracked”和“PrimoRamdiskCracked”里面的“FancyCcV.exe”和“FancyRd.exe”分别覆盖原文件。如图：
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/31b61c251e94a604e32ac8adb9f17262.png" alt="TIM截图20181004123615" width="1518" height="766" />
+
+至此，安装及破解完毕。
+
+二、配置
+
+注意：本段教程请根据自己实际要求配置。下面给出的教程的方案是：分物理内存的1024M做L1缓存，再分物理内存的1024M做L2缓存。即：全部使用物理内存来加速L1/L2缓存区速度，共占用内存大小2048M（2G）！
+
+1.双击桌面上的“Primo Ramdisk Server Edition”，如图所示操作：（如果不需要提升L2缓存的小伙伴直接跳到第二步即可！）
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/cf9a1a0e55e7f3068752942972a129b9.png" alt="1" width="711" height="541" />
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/1ff4852247fd7148ba546233eacdde54.png" alt="2" width="711" height="541" />
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/dac21f857263df38098c59c00ab44ad5.png" alt="3" width="711" height="541" />
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/afb774bcf7ee20bf30fdf8400ad68194.png" alt="4" width="711" height="541" />
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/03edca4fdd1017c21179f2c45519845d.png" alt="5" width="711" height="541" />
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/767e4d60db2203399cd87367268825f7.png" alt="6" width="711" height="541" />
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/91d82c859e194b919ec0f605fdade5a4.png" alt="7" width="711" height="541" />
+
+至此，你已经成功分配了物理内存的一部分作为了一个新的硬盘。
+
+2.双击桌面上的“PrimoCache”，进行如图所示的配置：
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/1f6429bbd97ed53b3cec28127b3cdb46.png" alt="8" width="857" height="653" />
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/f5010435fdf6d6781f495c6eb71cbd90.png" alt="9" width="856" height="650" />
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/31ab648dda79f141428d194a87596767.png" alt="10" width="857" height="650" />
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/e0a4bb6f16a216dd06c2ddd81ef84274.png" alt="11" width="855" height="653" />
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/3cb003ed3d518efbffd0f9295927fb29.png" alt="12" width="855" height="653" />
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/26b8a5f8b53d584a7f773a572d581b0e.png" alt="13" width="851" height="644" />
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/8b12ec4912a199671066cf4539371163.png" alt="14" width="851" height="644" />
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/748a9f9abe22b596e975058bba55efc7.png" alt="16" width="851" height="644" />
+
+最后，点击"启动"即可。
+
+至此，基本的加速教程已经完毕。
+
+<hr />
+
+小科普（此处借用E-CLASS的的科普）：
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/91817d58552bf65e37edfca4035badee.png" alt="j1" width="1024" height="576" />
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/1fbd570bf081d888a87f0f1fb0241d73.png" alt="j2" width="1024" height="576" />
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/7592889f0a8164c00b0287e7180786a1.png" alt="j3" width="1024" height="576" />
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/829180adf4e9cc0b79c036c327dbd2d0.png" alt="j4" width="1024" height="576" />
+
+<hr />
+
+效果图：
+
+这是三星PM961分了1G L1的效果：
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/b06ff5d507841893665d1bbb257b5ec0.jpg" alt="TIM图片20181004133954" width="999" height="476" />
+
+这是三星PM961分了1G L1 1G L2的效果：
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/9ce321be8e629be5b61c83232b7fba58.png" alt="TIM图片20181004134010" width="513" height="476" />
+
+连老古董的机器（垃圾杂牌SSD，没加速之前写入速度只有70m/s左右，这是分了2gL1后的效果！！）
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/9c7ce7da3d8296af3baaa6d31f349106.jpg" alt="TIM图片20181004134003" width="720" height="405" />
+
+<hr />
+
+最后，欢迎关注本博客啦~

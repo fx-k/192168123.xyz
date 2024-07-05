@@ -1,0 +1,41 @@
+---
+title: "win平台python3.7安装dlib包提示的CMake问题解决"
+date: '2021-03-16T17:16:07Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2021-03-16T17:16:07Z'
+raw_comment_count: '0'
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=1122](https://blog.fxit.top/?p=1122)
+:::
+
+感谢博主Toblerone_Wind提供的思路。
+
+<hr />
+
+`python version 3.7.2`            操作系统是 Windows 10 家庭版64位
+
+在命令行执行`pip3 install dlib`时会中断，错误提示是 缺少`CMake（CMake must be installed to build the following extensions: dlib）`
+
+到官网下载CMake并配置path后又提示platform问题（`NMake Makefiles does ot support platform specification, but platform x64 was`）
+
+几番查证
+
+解决方法：到https://visualstudio.microsoft.com/zh-hans/downloads/
+
+下载Visual Studio 2017 社区版 可以在安装的时候选择工作负载和组建，也可以安装内核后打开Visual Studio Installer进行以下配置
+
+【1.打开 Visual Studio Installer -》修改-》单个组件-》勾选 用于 CMake 的 Visual C++ 工具-》修改
+
+2.Visual Studio Installer -》工作负载-》 使用C++的桌面开发-》修改】
+
+配置一下path 计算机-》属性-》高级系统设置-》环境变量-》Path-》编辑-》加入C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin   后确定（这是默认的路径
+
+重启之后 进入cmd -》pip3 install dlib
+
+安装会持续10分钟左右，没有进度显示，会显得特别漫长，cpu占用量挺大的，不建议这时候进行别的工作
+
+希望能给你帮助

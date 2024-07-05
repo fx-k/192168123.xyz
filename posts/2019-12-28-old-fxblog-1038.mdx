@@ -1,0 +1,106 @@
+---
+title: "Centos7安装VNC+XFCE+FireFox"
+date: '2019-12-28T22:36:33Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2020-04-11T16:54:57Z'
+raw_comment_count: '0'
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=1038](https://blog.fxit.top/?p=1038)
+:::
+
+:::warning
+注意，该文章排版可能存在兼容问题，建议配合旧版本博客食用~
+:::
+
+已在阿里云Centos7上通过测试！
+
+<hr />
+
+## 1.升级所有包、软件和系统内核
+`yum update`
+
+## 2.安装Xfce
+（使用
+`yum grouplist`
+
+查看XFCE包名，我的是Xfce）
+<img src="https://oss.192168123.xyz/image/old-fxblog-img/5423c97029f56f0ae1d895e5d51b5ad4.jpg" alt="o_1dt6dk0397vppb75d7m9n33oa.jpeg" />
+`yum groupinstall Xfce`
+（包名按自己的修改）
+## 3.安装VNC
+`yum install vnc vnc-server`
+PS：有些安装完输入vncpasswd却提示命令不存在的...应该换下面这个安装命令：
+`yum install tigervnc-server`
+## 4.配置VNC系统及分辨率
+`vi /etc/sysconfig/vncservers`
+然后在内容中添加
+`VNCSERVERS="1:root`
+`VNCSERVERARGS[1]="-geometry 1024x768"`
+上面的分辨率可以根据我们自己的需要修改，比如可以改成800x600等。
+## 5.设置VNC密码
+`vncpasswd`
+输入命令之后会提示让我们输入VNC密码，输入一次之后回车，然后还需要输入一次。
+## 6.启动VNC系统环境
+`vncserver`
+## 7.修改xstartup配置文件
+`vi /root/.vnc/xstartup`
+所有的内容都替换成下面的内容。
+```bash
+#!/bin/sh
+# Uncomment the following two lines for normal desktop:
+unset SESSION_MANAGER
+#exec /etc/X11/xinit/xinitrc
+[ -x /etc/vnc/xstartup ]    exec /etc/vnc/xstartup
+[ -r $HOME/.Xresources ]    xrdb $HOME/.Xresources
+xsetroot -solid grey
+vncconfig -iconic 
+#xterm -geometry 80x24+10+10 -ls -title "$VNCDESKTOP Desktop"&amp;
+#twm &amp;
+startxfce4
+```
+然后输入!，再输入wq，回车保存
+## 8.启动VNC-SERVER
+1)拷贝1号窗口的服务配置文件
+`cp /lib/systemd/system/vncserver@.service /etc/systemd/system/vncserver@:1.service`
+`/etc/systemd/system`下面的、vncserver@后面的冒号数字，表示服务实例编号，可以配置多个服务实例，指定不同的编号的即可。VNC的服务端口从5900开始，根据服务实例编号增加，比如示例的vncserver@:1.service，对应的端口号就是5901，如果是vncserver@:10.service，那对应的端口号就是5910。
+2)修改所需打开服务窗口的配置文件
+`vi /etc/systemd/system/vncserver@:1.service`
+修改所需打开服务窗口的配置文件,将配置文件中的42,43两行中的
+`USER`
+替换为需要通过vnc远程登录的用户名。
+```
+#!/bin/sh
+# Uncomment the following two lines for normal desktop:
+unset SESSION_MANAGER
+#exec /etc/X11/xinit/xinitrc
+[ -x /etc/vnc/xstartup ]  exec /etc/vnc/xstartup
+[ -r $HOME/.Xresources ]  xrdb $HOME/.Xresources
+xsetroot -solid grey
+vncconfig -iconic 
+#xterm -geometry 80x24+10+10 -ls -title "$VNCDESKTOP Desktop"&amp;
+#twm 
+startxfce4 
+```
+其中第二行的/home是用户的home目录；如果是root则 是/root，即PIDFile=/root/.vnc/%H%i.pid。
+
+3)刷新服务、设置自启、启动服务
+`systemctl daemon reload`
+
+`systemctl enable vncserver@:1.service #设置该1号窗口为开机自启`
+
+`systemctl start vncserver@:1.service`
+4)放行端口5901（或你设置的其他端口）
+
+PS：停止进程命令：
+`systemctl stop vncserver@:n  (n代表窗口号)`
+## 9.安装FireFox浏览器并使其支持简体中文
+```
+yum -y install firefox
+yum install kde-l10n-Chinese
+yum groupinstall "fonts"
+```
+然后vnc登录桌面打开 FireFox浏览器 在设置里设置语言为 简体中文 然后重启 即可

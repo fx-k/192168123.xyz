@@ -1,0 +1,90 @@
+---
+title: "linux使用锐速TCP加速软件方法"
+date: '2016-07-03T13:53:42Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2019-01-12T16:51:10Z'
+raw_comment_count: '0'
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [http://blog.fxit.top/?p=151](http://blog.fxit.top/?p=151)
+:::
+
+:::warning
+注意，该文章图片部分由于外链失效已经丢失，阅读需留心噢~
+:::
+
+锐速TCP加速软件适用系统
+
+windows目前支持：windows XP / 2003 / Vista / 2008/ 7
+
+linux目前支持：Centos/Redhat/Fedora/Debian等，
+
+具体支持内核请看http://my.serverspeeder.com/ls.do?m=availables
+
+<strong>锐速TCP加速软件适用系统</strong>
+
+windows目前支持：windows XP / 2003 / Vista / 2008/ 7
+
+linux目前支持：Centos/Redhat/Fedora/Debian等，
+
+具体支持内核请看[http://my.serverspeeder.com/ls.do?m=availables](http://my.serverspeeder.com/ls.do?m=availables)
+
+先用ifconfig查看网卡设备名称，比如eth0或者eth1，安装锐速时候网卡一定要对应
+<img alt="" src="https://oss.192168123.xyz/image/error_img.png?http://o9brvw27g.bkt.clouddn.com/2016011770506465.jpg?attname=&amp;e=1467528140&amp;token=eMKUrHcCZtBPWPHjKxvvOvBegPU_l3g4U7ZQLJTz:VjS4NzAvahiTIrprnq6LqwIejRM"/>
+锐速TCP加速软件安装
+
+Windows安装锐速TCP加速软件
+
+在windows下锐速的安装为图形化安装，一步一步来就好，原来的老版本还需要注册账号密码，现在的最近版本连账号密码都不用输入了。
+
+Linux安装锐速TCP加速软件
+
+<strong>推荐选用自动化安装</strong>
+
+1 下载自动化安装脚本
+
+`wget http://my.serverspeeder.com/d/ls/serverSpeederInstaller.tar.gz`
+
+2 解压缩
+
+`tar xzvf serverSpeederInstaller.tar.gz`
+
+3 运行自动化安装脚本
+
+`bash serverSpeederInstaller.sh`
+
+4 根据屏幕提示输入 ServerSpeeder 安装授权帐号和密码，也就是您在锐速网站注册的邮箱和密码
+
+5安装授权验证通过后，安装程序会自动连接 ServerSpeeder 下载服务器并下载已授权的 ServerSpeeder 程序；该过程视您的网络状况和服务器繁忙程度的不同，将持续几秒或几十秒的时间
+
+6 根据屏幕提示，输入【欲加速的接口】、【上行带宽】、【下行带宽】等
+
+如果不清楚一路回车即可，需要注意的几个地方，如图：
+
+<img alt="" src="https://oss.192168123.xyz/image/error_img.png?http://o9brvw27g.bkt.clouddn.com/2016011770635225.jpg?attname=&amp;e=1467528376&amp;token=eMKUrHcCZtBPWPHjKxvvOvBegPU_l3g4U7ZQLJTz:KieI23Auq33RiYkuymGktfha_UQ"/>
+<img alt="" src="https://oss.192168123.xyz/image/error_img.png?http://o9brvw27g.bkt.clouddn.com/1112016011770662225.jpg?attname=&amp;e=1467528411&amp;token=eMKUrHcCZtBPWPHjKxvvOvBegPU_l3g4U7ZQLJTz:atX56m1HJRm1M0kU_Jz4kaafaKU"/>
+<img alt="" src="https://oss.192168123.xyz/image/error_img.png?http://o9brvw27g.bkt.clouddn.com/231323.jpg?attname=&amp;e=1467528456&amp;token=eMKUrHcCZtBPWPHjKxvvOvBegPU_l3g4U7ZQLJTz:XnsLB8252RiaNls_M9CfastKkBE"/>
+安装完成，如图：
+<img alt="" src="https://oss.192168123.xyz/image/error_img.png?http://o9brvw27g.bkt.clouddn.com/6767.jpg?attname=&amp;e=1467528504&amp;token=eMKUrHcCZtBPWPHjKxvvOvBegPU_l3g4U7ZQLJTz:ZACvceVnjoa-DqK1mAUH7-BHIxc"/>
+
+7 根据屏幕提示选择是否随机启动 ServerSpeeder
+
+8 根据屏幕提示选择是否立即启动 ServerSpeeder
+
+<strong>Linux下锐速TCP加速软件常用操作命令</strong>
+
+启动锐速：`/serverspeeder/bin/serverSpeeder.sh start`
+
+停止锐速：`/serverspeeder/bin/serverSpeeder.sh stop`
+
+卸载锐速：
+
+在确保锐速没有运行的情况下，您可以通过两种方式来卸载锐速：
+
+使用安装脚本的卸载功能卸载锐速，如：`./serverSpeederInstaller.sh uninstall`
+通过简单的删除操作，如’`rm -rf /serverspeeder`
+查看锐速是否正常运行： lsmod ；检查是否有appex0模块`service serverSpeeder status`
+更新锐速授权：`/serverspeeder/bin/serverSpeeder.sh renewLic`

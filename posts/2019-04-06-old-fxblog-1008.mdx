@@ -1,0 +1,64 @@
+---
+title: "安利一款digispark代码生成器——Automator"
+date: '2019-04-06T19:56:17Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2019-04-06T19:56:17Z'
+raw_comment_count: '0'
+image: https://oss.192168123.xyz/image/old-fxblog-img/cover/e47f881c4588cc5c0b151a3b5dc2f817.png
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=1008](https://blog.fxit.top/?p=1008)
+:::
+
+:::warning
+注意，该文章图片部分由于外链失效已经丢失，阅读需留心噢~
+:::
+
+:::warning
+注意，该文章排版可能存在兼容问题，建议配合旧版本博客食用~
+:::
+
+安利一款很方便的digispark代码生成器——Automator
+
+话不多说，上教程：
+传统的Ducky Script转换的Arduino程序只能在官方芯片上工作，因为函数和库不一样，不能用在社区贡献的芯片上。（比如我这个仅￥8（$1）的Digispark™ Kickstarter（ATTiny85））。所以我写了Automator程序来简化Digispark™芯片的USB HID 键盘程序开发。<span id="more-1222"></span>
+### 注意：本文所述为第一版的 Automator，现已弃用。以下内容为存档。
+## 关于程序
+[<img alt="" height="64" src="https://oss.192168123.xyz/image/error_img.png?https://ralf.ren/wp-content/uploads/2017/03/64.png" width="64"/>](https://ralf.ren/wp-content/uploads/2017/03/64.png)<strong>Automator</strong>
+
+下载地址：[https://github.com/CYRO4S/Automator/releases](https://github.com/CYRO4S/Automator/releases)
+<ul>
+<li>平台：Windows</li>
+<li>大小：229KB</li>
+<li>语言：简体中文</li>
+<li>开源协议：MIT</li>
+<li>依赖：.Net Framework 4.0</li>
+<hr/>
+</ul>
+## 使用Automator
+<img alt="" data- height="368" sizes="(max-width: 525px) 100vw, 525px" src="https://oss.192168123.xyz/image/error_img.png?https://ralf.ren/wp-content/uploads/2017/03/1-1024x717.png"  width="525"/>
+
+Automator的左边是即时代码生成区，右边是控制区。编写一个Digispark™ USB HID 键盘程序的简单流程是这样的：
+
+<strong>在控制区中编辑选项 – 点击添加按钮添加代码 – 检查与微调 – 点击生成按钮生成Arduino文件 – 烧录</strong>
+
+在右边的控制区填写内容并点击“添加”后，Automator将会在左边的代码区最下方新增一行代码：
+
+<img alt="" data- height="368" sizes="(max-width: 525px) 100vw, 525px" src="https://oss.192168123.xyz/image/error_img.png?https://ralf.ren/wp-content/uploads/2017/03/3-1024x717.png"  width="525"/>
+
+若你发现添加的代码不对，直接在左边修改就可以了，没有过多的操作。
+
+<hr/>
+
+## 问题与解答
+<ul>
+<li>Q：为什么可以模拟按下的按键不全？比如没有Escape、Menu、Backspace等？
+A：Digispark™在”<em>DigiKeyboard.h</em>“头文件中并未定义上述功能键。若Automator支持将会无法编译。</li>
+<li>Q：我可以在编辑区添加除过USB HID键盘以外相关函数外其他的代码吗？
+A：完全可以。你在左边代码区进行的更改会依据你在“通用”-“执行方式”中的选择写入 <em>setup()</em> 或<em> loop() </em>函数。但请注意，Automator并没有侦错功能。</li>
+</ul>
+
+正如上所说，不过博主在最新版本里面没看到中文的选项，所以还是建议各位小伙伴使用1.0.0 Only Simplified Chinese now的那个版本，无论是中文的支持还是ui的明了清晰程度都十分好！也可以在文末下载链接下载。

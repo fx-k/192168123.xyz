@@ -1,0 +1,191 @@
+---
+title: "Cloudreve-v3版本修改源码&构建编译教程"
+date: '2020-04-05T20:41:45Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2020-04-06T11:28:37Z'
+raw_comment_count: '0'
+image: https://oss.192168123.xyz/image/old-fxblog-img/cover/100eb2935f3cb670542250e441591980.png
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=1074](https://blog.fxit.top/?p=1074)
+:::
+
+:::warning
+注意，该文章排版可能存在兼容问题，建议配合旧版本博客食用~
+:::
+
+Cloudreve是一个支持多种存储方案的云盘系统，可以很方便地搭建一个属于自己的云盘。
+
+最近Cloudreve有一次大更新，将v2版本升级到了v3版本，由原来的ThinkPHP ，更换成了Go版本，将前后端整合为一个可执行文件，直接运行就可以，十分方便。
+
+但有利也有弊，这对于一些需要修改源码的人不太友好，尤其是不太熟悉Go的（例如博主）。
+
+认真研究的话，其实还好，需要熟悉Cloudreve v3前后端的基本组成，以及对material-ui有基本的认识。
+
+<hr />
+
+博主使用系统：Centos7 amd64
+
+博主在本地虚拟机使用Centos7编译好之后上传到服务器上(Ubuntu)就可以使用了。
+
+必备环境：Go+Node.js+Yarn+statik 命令行工具
+Cloudreve 项目主要由两部分组成：后端主仓库 <a  href="https://github.com/cloudreve/Cloudreve" target="_blank" rel="noopener noreferrer" data-key="daf7b221c4d14b6a8b55a4a408019ad0">cloudreve/Cloudreve</a>，以及前端仓库 <a  href="https://github.com/cloudreve/frontend" target="_blank" rel="noopener noreferrer" data-key="b567daa1345b44ef84f6166e9bb434a4">cloudreve/frontend</a> 。编译 Cloudreve 后端前，需要先构建assets 目录下的前端子模块，并使用<a  href="https://github.com/rakyll/statik" target="_blank" rel="noopener noreferrer" data-key="9caa3c8bad4445c89d242193f9a6c51e">statik嵌入到后端仓库。</a>
+
+<hr />
+
+## Step.1-安装Node.js
+我们可以使用epel-release安装Node
+`sudo yum install epel-release`
+`sudo yum install nodejs`
+然后使用
+`node --version`
+检查一下是否安装成功。
+
+这个时候我们通过epel安装的node版本比较旧，达不到Cloudreve编译的要求，我们使用：
+`n 10.3.0 stable`
+来将node升级到10.3.0即可。
+
+<hr />
+
+## Step.2-安装Yarn
+我们可以通过 RPM 包仓库安装 Yarn：
+`curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | sudo tee /etc/yum.repos.d/yarn.repo`
+然后输入：
+`curl --silent --location https://rpm.nodesource.com/setup_6.x | bash -`
+之后使用
+`sudo yum install yarn`
+即可简单地将yarn安装完成了。
+
+我们使用
+`yarn --version`
+来看看yarn是否安装成功。
+
+<hr />
+
+## Step.3-安装Go
+首先在 ~ 下创建 go 文件夹，并进入 go 文件夹
+`mkdir ~/go &amp;&amp; cd ~/go`
+然后在[Golang官网下载地址](https://golang.org/dl/)选择适合你系统的Go版本，博主这里选择的是<a  href="https://dl.google.com/go/go1.14.1.linux-amd64.tar.gz">go1.14.1.linux-amd64.tar.gz</a>。
+
+下载安装包：
+`wget https://dl.google.com/go/go1.14.1.linux-amd64.tar.gz`
+然后解压到/usr/loacl目录下：
+`tar -C /usr/local -zxvf  go1.14.1.linux-amd64.tar.gz`
+然后添加/usr/loacl/go/bin目录到PATH变量中
+`vim /etc/profile`
+在最后一行加入：
+`export GOROOT=/usr/local/go`
+`export PATH=$PATH:$GOROOT/bin`
+`:wq`保存后，使用
+`source /etc/profile`
+使配置生效。
+
+最后使用
+`go version`
+来看看Go是否安装成功。
+
+<hr />
+
+## Step.4-安装<span data-slate-fragment="JTdCJTIyb2JqZWN0JTIyJTNBJTIyZG9jdW1lbnQlMjIlMkMlMjJkYXRhJTIyJTNBJTdCJTdEJTJDJTIybm9kZXMlMjIlM0ElNUIlN0IlMjJvYmplY3QlMjIlM0ElMjJibG9jayUyMiUyQyUyMnR5cGUlMjIlM0ElMjJsaXN0LW9yZGVyZWQlMjIlMkMlMjJpc1ZvaWQlMjIlM0FmYWxzZSUyQyUyMmRhdGElMjIlM0ElN0IlN0QlMkMlMjJub2RlcyUyMiUzQSU1QiU3QiUyMm9iamVjdCUyMiUzQSUyMmJsb2NrJTIyJTJDJTIydHlwZSUyMiUzQSUyMmxpc3QtaXRlbSUyMiUyQyUyMmlzVm9pZCUyMiUzQWZhbHNlJTJDJTIyZGF0YSUyMiUzQSU3QiU3RCUyQyUyMm5vZGVzJTIyJTNBJTVCJTdCJTIyb2JqZWN0JTIyJTNBJTIyYmxvY2slMjIlMkMlMjJ0eXBlJTIyJTNBJTIycGFyYWdyYXBoJTIyJTJDJTIyaXNWb2lkJTIyJTNBZmFsc2UlMkMlMjJkYXRhJTIyJTNBJTdCJTdEJTJDJTIybm9kZXMlMjIlM0ElNUIlN0IlMjJvYmplY3QlMjIlM0ElMjJ0ZXh0JTIyJTJDJTIybGVhdmVzJTIyJTNBJTVCJTdCJTIyb2JqZWN0JTIyJTNBJTIybGVhZiUyMiUyQyUyMnRleHQlMjIlM0ElMjJzdGF0aWslMjAlRTUlOTElQkQlRTQlQkIlQTQlRTglQTElOEMlRTUlQjclQTUlRTUlODUlQjclMjIlMkMlMjJtYXJrcyUyMiUzQSU1QiU1RCU3RCU1RCU3RCU1RCU3RCU1RCU3RCU1RCU3RCU1RCU3RA==">statik 命令行工具</span>
+一句命令搞定：
+`go get github.com/rakyll/statik`
+
+<hr />
+
+## Step.5-下载&amp;修改Cloudreve源码
+首先安装git工具(已安装请忽视)，然后克隆GitHub上的源码：
+`yum install git -y`
+`git clone --recurse-submodules https://github.com/cloudreve/Cloudreve.git`
+然后我们
+`cd Cloudreve`
+<span data-slate-fragment="JTdCJTIyb2JqZWN0JTIyJTNBJTIyZG9jdW1lbnQlMjIlMkMlMjJkYXRhJTIyJTNBJTdCJTdEJTJDJTIybm9kZXMlMjIlM0ElNUIlN0IlMjJvYmplY3QlMjIlM0ElMjJibG9jayUyMiUyQyUyMnR5cGUlMjIlM0ElMjJwYXJhZ3JhcGglMjIlMkMlMjJpc1ZvaWQlMjIlM0FmYWxzZSUyQyUyMmRhdGElMjIlM0ElN0IlN0QlMkMlMjJub2RlcyUyMiUzQSU1QiU3QiUyMm9iamVjdCUyMiUzQSUyMnRleHQlMjIlMkMlMjJsZWF2ZXMlMjIlM0ElNUIlN0IlMjJvYmplY3QlMjIlM0ElMjJsZWFmJTIyJTJDJTIydGV4dCUyMiUzQSUyMmFzc2V0cyUyMiUyQyUyMm1hcmtzJTIyJTNBJTVCJTdCJTIyb2JqZWN0JTIyJTNBJTIybWFyayUyMiUyQyUyMnR5cGUlMjIlM0ElMjJjb2RlJTIyJTJDJTIyZGF0YSUyMiUzQSU3QiU3RCU3RCU1RCU3RCU1RCU3RCU1RCU3RCU1RCU3RA==">assets里面的就是前端的源码，一般我们只需修改assets文件夹里面的即可。</span>
+
+<span data-slate-fragment="JTdCJTIyb2JqZWN0JTIyJTNBJTIyZG9jdW1lbnQlMjIlMkMlMjJkYXRhJTIyJTNBJTdCJTdEJTJDJTIybm9kZXMlMjIlM0ElNUIlN0IlMjJvYmplY3QlMjIlM0ElMjJibG9jayUyMiUyQyUyMnR5cGUlMjIlM0ElMjJwYXJhZ3JhcGglMjIlMkMlMjJpc1ZvaWQlMjIlM0FmYWxzZSUyQyUyMmRhdGElMjIlM0ElN0IlN0QlMkMlMjJub2RlcyUyMiUzQSU1QiU3QiUyMm9iamVjdCUyMiUzQSUyMnRleHQlMjIlMkMlMjJsZWF2ZXMlMjIlM0ElNUIlN0IlMjJvYmplY3QlMjIlM0ElMjJsZWFmJTIyJTJDJTIydGV4dCUyMiUzQSUyMmFzc2V0cyUyMiUyQyUyMm1hcmtzJTIyJTNBJTVCJTdCJTIyb2JqZWN0JTIyJTNBJTIybWFyayUyMiUyQyUyMnR5cGUlMjIlM0ElMjJjb2RlJTIyJTJDJTIyZGF0YSUyMiUzQSU3QiU3RCU3RCU1RCU3RCU1RCU3RCU1RCU3RCU1RCU3RA==">由于Cloudreve前端是使用material-ui的，大家可以自行去[material-ui官网](https://material-ui.com/zh/)，里面有比较详细的例子和教程，相信花时间琢磨一下是不难的。</span>
+
+修改好前端源码之后我们安装一下依赖。
+```
+# 进入前端子模块
+cd assets
+# 安装依赖
+yarn install
+```
+
+<hr />
+
+## Step.6-构建&amp;编译
+在<span data-slate-fragment="JTdCJTIyb2JqZWN0JTIyJTNBJTIyZG9jdW1lbnQlMjIlMkMlMjJkYXRhJTIyJTNBJTdCJTdEJTJDJTIybm9kZXMlMjIlM0ElNUIlN0IlMjJvYmplY3QlMjIlM0ElMjJibG9jayUyMiUyQyUyMnR5cGUlMjIlM0ElMjJjb2RlJTIyJTJDJTIyaXNWb2lkJTIyJTNBZmFsc2UlMkMlMjJkYXRhJTIyJTNBJTdCJTIyc3ludGF4JTIyJTNBJTIyYmFzaCUyMiU3RCUyQyUyMm5vZGVzJTIyJTNBJTVCJTdCJTIyb2JqZWN0JTIyJTNBJTIyYmxvY2slMjIlMkMlMjJ0eXBlJTIyJTNBJTIyY29kZS1saW5lJTIyJTJDJTIyaXNWb2lkJTIyJTNBZmFsc2UlMkMlMjJkYXRhJTIyJTNBJTdCJTdEJTJDJTIybm9kZXMlMjIlM0ElNUIlN0IlMjJvYmplY3QlMjIlM0ElMjJ0ZXh0JTIyJTJDJTIybGVhdmVzJTIyJTNBJTVCJTdCJTIyb2JqZWN0JTIyJTNBJTIybGVhZiUyMiUyQyUyMnRleHQlMjIlM0ElMjJhc3NldHMlMjIlMkMlMjJtYXJrcyUyMiUzQSU1QiU1RCU3RCU1RCU3RCU1RCU3RCU1RCU3RCU1RCU3RA==">assets目录下，我们使用</span>
+`yarn run build`
+来构建修改好的前端的代码。
+<span ><span data-key="fd2ed1cffaec47d682334debb38e4785"><span data-offset-key="fd2ed1cffaec47d682334debb38e4785:0">完成后，所构建的静态资源文件位于assets/build 目录下。</span></span></span>
+
+
+<span ><span data-key="519305d15d4f4069afc1cd09f64250b2"><span data-offset-key="519305d15d4f4069afc1cd09f64250b2:0">你可以将此目录改名为statics 目录，放置在 Cloudreve 主程序同级目录下并重启 Cloudreve，Cloudreve 将会使用此目录下的静态资源文件，而非内置的。</span></span></span>
+
+然后我们开始<span data-slate-fragment="JTdCJTIyb2JqZWN0JTIyJTNBJTIyZG9jdW1lbnQlMjIlMkMlMjJkYXRhJTIyJTNBJTdCJTdEJTJDJTIybm9kZXMlMjIlM0ElNUIlN0IlMjJvYmplY3QlMjIlM0ElMjJibG9jayUyMiUyQyUyMnR5cGUlMjIlM0ElMjJoZWFkaW5nLTIlMjIlMkMlMjJpc1ZvaWQlMjIlM0FmYWxzZSUyQyUyMmRhdGElMjIlM0ElN0IlN0QlMkMlMjJub2RlcyUyMiUzQSU1QiU3QiUyMm9iamVjdCUyMiUzQSUyMnRleHQlMjIlMkMlMjJsZWF2ZXMlMjIlM0ElNUIlN0IlMjJvYmplY3QlMjIlM0ElMjJsZWFmJTIyJTJDJTIydGV4dCUyMiUzQSUyMiVFNSVCNSU4QyVFNSU4NSVBNSVFOSU5RCU5OSVFNiU4MCU4MSVFOCVCNSU4NCVFNiVCQSU5MCUyMiUyQyUyMm1hcmtzJTIyJTNBJTVCJTVEJTdEJTVEJTdEJTVEJTdEJTVEJTdE">嵌入静态资源：</span>
+
+```
+# 回到项目主目录
+cd ../
+
+# 安装 statik, 用于嵌入静态资源
+go get github.com/rakyll/statik
+
+# 开始嵌入
+statik -src=assets/build/  -include=*.html,*.js,*.json,*.css,*.png,*.svg,*.ico -f
+```
+
+<span ><span data-key="30506ec51e8646188fa6e4cdc7aeac76"><span data-offset-key="30506ec51e8646188fa6e4cdc7aeac76:0">如果在嵌入时找不到statik 命令，请尝试执行：export PATH=$PATH:$(go env GOPATH)/bin </span></span></span>
+
+之后，我们就可以编译可执行文件了：
+
+```
+# 获得当前版本号、Commit
+export COMMIT_SHA=$(git rev-parse --short HEAD)
+export VERSION=$(git describe --tags)
+
+# 开始编译
+go build -a -o cloudreve -ldflags " -X 'github.com/HFO4/cloudreve/pkg/conf.BackendVersion=$VERSION' -X 'github.com/HFO4/cloudreve/pkg/conf.LastCommit=$COMMIT_SHA'"
+<span data-key="36a940a8ef4644978ff6c33cc1911ef5"><span data-offset-key="36a940a8ef4644978ff6c33cc1911ef5:0">首次编译时，Go 会下载相关依赖库，如果您的网络环境不佳，可能会导致这一步速度过慢或者失败。你可以使用 </span></span><a  href="https://goproxy.io/zh/" target="_blank" rel="noopener noreferrer" data-key="126308c2541f484eb4eb16590a740306"><span data-key="86a7a76d843549a7b38c76ca910b4087"><span data-offset-key="86a7a76d843549a7b38c76ca910b4087:0">GOPROXY.IO</span></span></a><span data-key="59c24e13868a4cff8f68a4a172e73d08" data-slate-fragment="JTdCJTIyb2JqZWN0JTIyJTNBJTIyZG9jdW1lbnQlMjIlMkMlMjJkYXRhJTIyJTNBJTdCJTdEJTJDJTIybm9kZXMlMjIlM0ElNUIlN0IlMjJvYmplY3QlMjIlM0ElMjJibG9jayUyMiUyQyUyMnR5cGUlMjIlM0ElMjJoaW50JTIyJTJDJTIyaXNWb2lkJTIyJTNBZmFsc2UlMkMlMjJkYXRhJTIyJTNBJTdCJTIyc3R5bGUlMjIlM0ElMjJpbmZvJTIyJTdEJTJDJTIybm9kZXMlMjIlM0ElNUIlN0IlMjJvYmplY3QlMjIlM0ElMjJibG9jayUyMiUyQyUyMnR5cGUlMjIlM0ElMjJwYXJhZ3JhcGglMjIlMkMlMjJpc1ZvaWQlMjIlM0FmYWxzZSUyQyUyMmRhdGElMjIlM0ElN0IlN0QlMkMlMjJub2RlcyUyMiUzQSU1QiU3QiUyMm9iamVjdCUyMiUzQSUyMnRleHQlMjIlMkMlMjJsZWF2ZXMlMjIlM0ElNUIlN0IlMjJvYmplY3QlMjIlM0ElMjJsZWFmJTIyJTJDJTIydGV4dCUyMiUzQSUyMiVFOSVBNiU5NiVFNiVBQyVBMSVFNyVCQyU5NiVFOCVBRiU5MSVFNiU5NyVCNiVFRiVCQyU4Q0dvJTIwJUU0JUJDJTlBJUU0JUI4JThCJUU4JUJEJUJEJUU3JTlCJUI4JUU1JTg1JUIzJUU0JUJFJTlEJUU4JUI1JTk2JUU1JUJBJTkzJUVGJUJDJThDJUU1JUE2JTgyJUU2JTlFJTlDJUU2JTgyJUE4JUU3JTlBJTg0JUU3JUJEJTkxJUU3JUJCJTlDJUU3JThFJUFGJUU1JUEyJTgzJUU0JUI4JThEJUU0JUJEJUIzJUVGJUJDJThDJUU1JThGJUFGJUU4JTgzJUJEJUU0JUJDJTlBJUU1JUFGJUJDJUU4JTg3JUI0JUU4JUJGJTk5JUU0JUI4JTgwJUU2JUFEJUE1JUU5JTgwJTlGJUU1JUJBJUE2JUU4JUJGJTg3JUU2JTg1JUEyJUU2JTg4JTk2JUU4JTgwJTg1JUU1JUE0JUIxJUU4JUI0JUE1JUUzJTgwJTgyJUU0JUJEJUEwJUU1JThGJUFGJUU0JUJCJUE1JUU0JUJEJUJGJUU3JTk0JUE4JTIwJTIyJTJDJTIybWFya3MlMjIlM0ElNUIlNUQlN0QlNUQlN0QlMkMlN0IlMjJvYmplY3QlMjIlM0ElMjJpbmxpbmUlMjIlMkMlMjJ0eXBlJTIyJTNBJTIybGluayUyMiUyQyUyMmlzVm9pZCUyMiUzQWZhbHNlJTJDJTIyZGF0YSUyMiUzQSU3QiUyMmhyZWYlMjIlM0ElMjJodHRwcyUzQSUyRiUyRmdvcHJveHkuaW8lMkZ6aCUyRiUyMiU3RCUyQyUyMm5vZGVzJTIyJTNBJTVCJTdCJTIyb2JqZWN0JTIyJTNBJTIydGV4dCUyMiUyQyUyMmxlYXZlcyUyMiUzQSU1QiU3QiUyMm9iamVjdCUyMiUzQSUyMmxlYWYlMjIlMkMlMjJ0ZXh0JTIyJTNBJTIyR09QUk9YWS5JTyUyMiUyQyUyMm1hcmtzJTIyJTNBJTVCJTVEJTdEJTVEJTdEJTVEJTdEJTJDJTdCJTIyb2JqZWN0JTIyJTNBJTIydGV4dCUyMiUyQyUyMmxlYXZlcyUyMiUzQSU1QiU3QiUyMm9iamVjdCUyMiUzQSUyMmxlYWYlMjIlMkMlMjJ0ZXh0JTIyJTNBJTIyJTIwJUU1JThBJUEwJUU1JUJGJUFCJUU2JUE4JUExJUU1JTlEJTk3JUU0JUI4JThCJUU4JUJEJUJEJUU5JTgwJTlGJUU1JUJBJUE2JUUzJTgwJTgyJTIyJTJDJTIybWFya3MlMjIlM0ElNUIlNUQlN0QlNUQlN0QlNUQlN0QlNUQlN0QlNUQlN0Q="><span data-offset-key="59c24e13868a4cff8f68a4a172e73d08:0"> 加快模块下载速度。</span></span>
+<span data-offset-key="e9e43df9f03b4180b6eb5bec91f4b9d3:0">编译完成后，会在项目根目录下生成最终的可执行文件</span>cloudreve<span data-offset-key="e9e43df9f03b4180b6eb5bec91f4b9d3:2" data-slate-fragment="JTdCJTIyb2JqZWN0JTIyJTNBJTIyZG9jdW1lbnQlMjIlMkMlMjJkYXRhJTIyJTNBJTdCJTdEJTJDJTIybm9kZXMlMjIlM0ElNUIlN0IlMjJvYmplY3QlMjIlM0ElMjJibG9jayUyMiUyQyUyMnR5cGUlMjIlM0ElMjJwYXJhZ3JhcGglMjIlMkMlMjJpc1ZvaWQlMjIlM0FmYWxzZSUyQyUyMmRhdGElMjIlM0ElN0IlN0QlMkMlMjJub2RlcyUyMiUzQSU1QiU3QiUyMm9iamVjdCUyMiUzQSUyMnRleHQlMjIlMkMlMjJsZWF2ZXMlMjIlM0ElNUIlN0IlMjJvYmplY3QlMjIlM0ElMjJsZWFmJTIyJTJDJTIydGV4dCUyMiUzQSUyMiVFNyVCQyU5NiVFOCVBRiU5MSVFNSVBRSU4QyVFNiU4OCU5MCVFNSU5MCU4RSVFRiVCQyU4QyVFNCVCQyU5QSVFNSU5QyVBOCVFOSVBMSVCOSVFNyU5QiVBRSVFNiVBMCVCOSVFNyU5QiVBRSVFNSVCRCU5NSVFNCVCOCU4QiVFNyU5NCU5RiVFNiU4OCU5MCVFNiU5QyU4MCVFNyVCQiU4OCVFNyU5QSU4NCVFNSU4RiVBRiVFNiU4OSVBNyVFOCVBMSU4QyVFNiU5NiU4NyVFNCVCQiVCNiUyMiUyQyUyMm1hcmtzJTIyJTNBJTVCJTVEJTdEJTJDJTdCJTIyb2JqZWN0JTIyJTNBJTIybGVhZiUyMiUyQyUyMnRleHQlMjIlM0ElMjJjbG91ZHJldmUlMjIlMkMlMjJtYXJrcyUyMiUzQSU1QiU3QiUyMm9iamVjdCUyMiUzQSUyMm1hcmslMjIlMkMlMjJ0eXBlJTIyJTNBJTIyY29kZSUyMiUyQyUyMmRhdGElMjIlM0ElN0IlN0QlN0QlNUQlN0QlMkMlN0IlMjJvYmplY3QlMjIlM0ElMjJsZWFmJTIyJTJDJTIydGV4dCUyMiUzQSUyMiUyMCVFMyU4MCU4MiUyMiUyQyUyMm1hcmtzJTIyJTNBJTVCJTVEJTdEJTVEJTdEJTVEJTdEJTVEJTdE"> 。</span>
+
+然后我们将cloudreve<span data-offset-key="e9e43df9f03b4180b6eb5bec91f4b9d3:2" data-slate-fragment="JTdCJTIyb2JqZWN0JTIyJTNBJTIyZG9jdW1lbnQlMjIlMkMlMjJkYXRhJTIyJTNBJTdCJTdEJTJDJTIybm9kZXMlMjIlM0ElNUIlN0IlMjJvYmplY3QlMjIlM0ElMjJibG9jayUyMiUyQyUyMnR5cGUlMjIlM0ElMjJwYXJhZ3JhcGglMjIlMkMlMjJpc1ZvaWQlMjIlM0FmYWxzZSUyQyUyMmRhdGElMjIlM0ElN0IlN0QlMkMlMjJub2RlcyUyMiUzQSU1QiU3QiUyMm9iamVjdCUyMiUzQSUyMnRleHQlMjIlMkMlMjJsZWF2ZXMlMjIlM0ElNUIlN0IlMjJvYmplY3QlMjIlM0ElMjJsZWFmJTIyJTJDJTIydGV4dCUyMiUzQSUyMiVFNyVCQyU5NiVFOCVBRiU5MSVFNSVBRSU4QyVFNiU4OCU5MCVFNSU5MCU4RSVFRiVCQyU4QyVFNCVCQyU5QSVFNSU5QyVBOCVFOSVBMSVCOSVFNyU5QiVBRSVFNiVBMCVCOSVFNyU5QiVBRSVFNSVCRCU5NSVFNCVCOCU4QiVFNyU5NCU5RiVFNiU4OCU5MCVFNiU5QyU4MCVFNyVCQiU4OCVFNyU5QSU4NCVFNSU4RiVBRiVFNiU4OSVBNyVFOCVBMSU4QyVFNiU5NiU4NyVFNCVCQiVCNiUyMiUyQyUyMm1hcmtzJTIyJTNBJTVCJTVEJTdEJTJDJTdCJTIyb2JqZWN0JTIyJTNBJTIybGVhZiUyMiUyQyUyMnRleHQlMjIlM0ElMjJjbG91ZHJldmUlMjIlMkMlMjJtYXJrcyUyMiUzQSU1QiU3QiUyMm9iamVjdCUyMiUzQSUyMm1hcmslMjIlMkMlMjJ0eXBlJTIyJTNBJTIyY29kZSUyMiUyQyUyMmRhdGElMjIlM0ElN0IlN0QlN0QlNUQlN0QlMkMlN0IlMjJvYmplY3QlMjIlM0ElMjJsZWFmJTIyJTJDJTIydGV4dCUyMiUzQSUyMiUyMCVFMyU4MCU4MiUyMiUyQyUyMm1hcmtzJTIyJTNBJTVCJTVEJTdEJTVEJTdEJTVEJTdEJTVEJTdE"> 这个可执行文件上传到服务端或者生产环境中，就可以使用了。(注意系统架构要相同)</span>
+```
+<hr />
+
+## Step.7-修改和一键编译篇
+当我们需要再次修改源码时，我们又要重新执行上面的一大串步骤重新编译可执行文件。
+
+为此，博主整理了一下更方便的方法(其实也就是将前面的命令整合在一起，不用一条一条输入而已2333)：
+
+在Cloudreve目录下(也就是存在可执行文件的那个目录下)，输入以下代码即可快速重新构建新的可执行文件并自动测试执行：
+```
+
+cd assets&amp;&amp;rm -rf /home/test2/Cloudreve/assets/build&amp;&amp;yarn run build&amp;&amp;cd ../&amp;&amp;export PATH=$PATH:$(go env GOPATH)/bin&amp;&amp;statik -src=assets/build/  -include=*.html,*.js,*.json,*.css,*.png,*.svg,*.ico -f&amp;&amp;export COMMIT_SHA=$(git rev-parse --short HEAD)&amp;&amp;export VERSION=$(git describe --tags)&amp;&amp;go build -a -o cloudreve -ldflags " -X 'github.com/HFO4/cloudreve/pkg/conf.BackendVersion=$VERSION' -X 'github.com/HFO4/cloudreve/pkg/conf.LastCommit=$COMMIT_SHA'"&amp;&amp;./cloudreve
+```
+
+<hr />
+
+## Tips-修改教程提示
+如需修改边栏代码（增加按钮项），可修改assets/src/component/Navbar/Navbar.js文件
+
+在对应位置仿照格式增添/修改即可，如：
+```
+
+ ListItem
+button
+key="菜单A"                   #新的边栏名称
+onClick={() =  this.props.history.push("/XXX")} #onClick事件绑定，路由到指定地址（可使用window.location.href = 'http://fxit.top'跳出程序，跳转外部链接）
+
+ ListItemIcon 
+ AppsIcon                     #引入了对应的图标
+className={classes.iconFix}   #这里是对引入的图标修改大小格式
+/ 
+ /ListItemIcon 
+ ListItemText primary="菜单A" /      #新的边栏名称
+ /ListItem
+
+```
+&nbsp;

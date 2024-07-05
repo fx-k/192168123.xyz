@@ -1,0 +1,60 @@
+---
+title: "给境内服务器配置socks5，加快下载海外文件"
+date: '2020-04-05T20:53:45Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2020-04-05T20:53:45Z'
+raw_comment_count: '0'
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=1094](https://blog.fxit.top/?p=1094)
+:::
+
+众所周知，境内vps服务器下载海外服务器的文件速度并不理想。
+
+有时候我们需要在境内vps上下载/克隆GitHub上面的文件，亦或是某个脚本调用了GitHub的链接，由于下载的速度不尽人意，往往很浪费时间。
+
+于是我们可以通过使用proxychains4，来连接socks5服务器，加快海外文件的下载速度。
+
+<hr />
+
+博主环境：Centos7
+
+<hr />
+
+## Step.1-准备工作
+首先安装Git，用于克隆GitHub上面的proxychains4仓库。
+
+简简单单，只需执行：
+`yum install git`
+然后，安装一下编译需要用到的一些工具：
+`yum -y install gcc automake autoconf libtool make`
+
+<hr />
+
+## Step.2-编译安装proxychains4
+首先，克隆proxychains4代码：
+`git clone https://github.com/rofl0r/proxychains-ng.git`
+然后进入目录，进行编译安装：
+```
+cd proxychains-ng
+./configure
+make &amp;&amp; sudo make install
+```
+
+<hr />
+
+## Step.3-配置proxychains4
+首先提取配置文件：
+`cp ./src/proxychains.conf /etc/proxychains.conf`
+清理一下安装残留文件：
+`cd .. &amp;&amp; rm -rf proxychains-ng`
+编辑配置文件：
+`vim /etc/proxychains.conf`
+跳转到文件最底部，将最后一行(有socks4的那行)改为socks5 你的IP 端口
+
+然后`:wq`即可。
+
+然后在你需要使用代理的命令前加上proxychains4即可（如：proxychains4 wget github.com）。

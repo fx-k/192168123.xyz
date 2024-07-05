@@ -8,7 +8,7 @@ const config = {
   },
   images: {
     formats: ['image/avif', 'image/webp'],
-    domains: [],
+    domains: ['oss.192168123.xyz', 'out.fxit.top', 'api.vwood.xyz'],
   },
   experimental: {
     serverComponentsExternalPackages: ['plaiceholder', 'fetch-site-metadata'],

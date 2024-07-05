@@ -1,0 +1,90 @@
+---
+title: "PN532！便宜又好用的NFC设备！"
+date: '2019-02-12T23:51:59Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2019-02-12T23:54:21Z'
+raw_comment_count: '2'
+image: https://oss.192168123.xyz/image/old-fxblog-img/cover/a3abc4b1652e29f3c03c3a2b9d914174.png
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=981](https://blog.fxit.top/?p=981)
+:::
+
+上次写博文说到的icopy设备是借的，很早就还回去了。。
+
+本来米6是全功能nfc，可是由于某种未知限制 。。。无法写0扇区，所以博主认为在家有个专用的nfc设备会比较方便。
+
+那这么说来，问问群里dalao。。必须是pn532啊！学生党省钱又好<del>折腾</del>方便的东西，上车上车必须上！
+
+(其实也买了很久了，一直没空写博文。。（咕咕咕）)
+
+<hr />
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/a189f0a02609ff4be8dc90178fab9853.png" alt="MYBLN00M}&#96;MA77%31~%E4[N" width="248" height="258" />
+
+就是这种！购买时候务必备注让卖家帮你焊接好(dalao请无视)，如果是win10的要备注一下是win10使用，否则可能就要自己开虚拟机了2333...
+
+（避免广告嫌疑就不放出商家名字了）
+
+<hr />
+
+然后...就是组装过程 。。。
+
+当时折腾挺久的，实际上压根不需要，其实挺简单的（被自己蠢哭23333）..
+
+当到货，卖家就用短接帽帮我短接了usb的txd和rxd，然后我一脸懵逼不知道要不要拔掉...（被自己蠢哭23333）
+
+其实后来才明白，短接txd和rxd是为了测试usb驱动已经驱动板是否通讯正常，正常之后就把他拔掉。
+
+然后按照GND对GND，VCC对5.0V，SDA对RXD，SCL对TXD 这样接线（注意，把板子放到有这些标识的一面，不然你就会像我一样被自己蠢哭23333）
+
+emm。。放张图片最简单明了:
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/1114f7803b4e8c6c584fdf3d17a327a5.png" alt="45V4[~MP4J%OWL]9RX9_10I" width="331" height="587" />
+
+(PS我上面所说的接线对应的标识，应该是上面图片红色的pn532反过来的那一面写的标识才对！)
+
+至此，硬件部分就ok了！
+
+<hr />
+
+软件部分也踩坑了一些，主要是卖家提供的软件有毒。。。。
+
+所以导致售后群很多人都出现了卡在“请稍后”界面的问题（[当时卖家都不知道为什么还叫我教他们233333](http://out.fxit.top/includes/prewview.php?ming=o_1d3h5k28hg391rf4t241v8h1alka.jpg&amp;surl=http://qiniu.fxit.top/o_1d3h5k28hg391rf4t241v8h1alka.jpg)）..
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/91144b057e2ae302227d7f2effc74821.png" alt="%L)4}R[LK0$_9O]PVP3@CH9" width="345" height="271" />
+
+解决办法也是很简单的。。直接换一个上位机版本呗2333
+
+当然我使用的上位机版本软件也已经在文末给出了，需要的自行下载呗23333~（侵删）
+
+当然还有很多的软件，都可以使用呢~
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/18b305329969de58df9a646488df5a9b.png" alt="C(X~C%LKBS67R)&#96;_1PRU$92" width="191" height="188" />
+
+<hr />
+
+那就简单说一下使用步骤吧！
+
+1.把卡放在pn532上（最好保持一定距离）
+
+2.点击【读整卡：读取卡片内容】
+
+3.然后就可以得到当前卡内所有扇区的内容，点击左上角的小三角形，如图：
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/817cd21a53171b0039f509c4f55603b4.png" alt="NNABN87WRC[)]~HH[GXNO4P" width="551" height="440" />
+
+4.在弹出的窗口选择【否】，然后把旧卡拿走，放上要复制到的新卡（建议UID卡），点【确认】更新卡内容，即可。
+
+5.至此，简单的卡片复制教程结束。（仅适用于简单的加密IC卡或未加密的IC卡(M1)）
+
+<hr />
+
+嗯，先更新到这吧，有问题可以在下方留言~
+
+最后晒一张博主魔改的“便携版”PN532，可以很方便的把卡固定在pn532上。
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/9dd2ea1fd46410cbbdf8f434352041f9.jpg" alt="IMG_20190212_234649" width="1024" height="576" />

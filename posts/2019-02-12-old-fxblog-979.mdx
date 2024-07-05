@@ -1,0 +1,43 @@
+---
+title: "移动硬盘右键没有删除的选项？硬盘突然变的只读，请看这里解决办法！"
+date: '2019-02-12T22:28:30Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2019-02-12T22:28:30Z'
+raw_comment_count: '0'
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=979](https://blog.fxit.top/?p=979)
+:::
+
+其实这个问题博主之前就出现过一次，后来又不记得怎么解决了。。。
+
+然后这次又出现了，找了半天才找到上次解决博主问题的那篇文章。。。
+
+特此分享，也方便博主以后出现问题能迅速解决~
+
+<hr />
+
+1.先确认是否是ntfs造成的只读，则按权限设置处理
+
+2.排除ntfs因素，则需要使用命令工具diskpart
+
+<hr />
+
+博主属于第二种情况，于是乎使用管理员权限撸开cmd，使用下面命令清除只读状态
+```
+C:\windows\system32\diskpart
+diskpart list disk #列出磁盘
+diskpart select disk [number] #选择有只读问题的磁盘序列标号
+diskpart attr disk clear readonly #清除只读属性
+```
+
+如果只是某个分区只读，请将以上disk名词替换成volume。
+
+<hr />
+
+特此感谢[@牛博恩](https://www.douban.com/note/283474310/)的整理和翻译，确实帮了我很多~
+
+原文参考地址：本文末尾

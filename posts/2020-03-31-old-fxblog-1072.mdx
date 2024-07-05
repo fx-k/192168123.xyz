@@ -1,0 +1,43 @@
+---
+title: "Linux配置host,解决境内服务器连不上GitHub的问题"
+date: '2020-03-31T17:08:30Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2020-03-31T17:08:30Z'
+raw_comment_count: '1'
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=1072](https://blog.fxit.top/?p=1072)
+:::
+
+众所周知GitHub在境内服务器的连通性都不太好，于是我们可以指定ip，达到稳定的效果。
+
+首先
+`sudo vi /etc/hosts`
+然后加入如下内容：
+```
+# GitHub Start
+192.30.253.112 github.com
+192.30.253.119 gist.github.com
+199.232.28.133 assets-cdn.github.com
+199.232.28.133 raw.githubusercontent.com
+199.232.28.133 gist.githubusercontent.com
+199.232.28.133 cloud.githubusercontent.com
+199.232.28.133 camo.githubusercontent.com
+199.232.28.133 avatars0.githubusercontent.com
+199.232.28.133 avatars1.githubusercontent.com
+199.232.28.133 avatars2.githubusercontent.com
+199.232.28.133 avatars3.githubusercontent.com
+199.232.28.133 avatars4.githubusercontent.com
+199.232.28.133 avatars5.githubusercontent.com
+199.232.28.133 avatars6.githubusercontent.com
+199.232.28.133 avatars7.githubusercontent.com
+199.232.28.133 avatars8.githubusercontent.com
+185.199.110.154 github.githubassets.com
+# GitHub End
+```
+然后就完事了，看看是否能正常连接GitHub。
+
+·这是博主最新找的一份ip，如果ip失效了，可以在去[https://githubusercontent.com.ipaddress.com/raw.githubusercontent.com](https://githubusercontent.com.ipaddress.com/raw.githubusercontent.com)，找到ip替换即可。

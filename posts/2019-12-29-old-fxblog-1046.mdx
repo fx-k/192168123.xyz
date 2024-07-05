@@ -1,0 +1,50 @@
+---
+title: "Ubuntu18安装VNC+XFCE+FireFox"
+date: '2019-12-29T12:20:11Z'
+tags:
+  - 旧博客内容
+updatedOn: '2020-04-11T16:55:31Z'
+raw_comment_count: '0'
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=1046](https://blog.fxit.top/?p=1046)
+:::
+
+已在阿里云ECS和virmach上经过测试！
+
+<hr />
+
+## 1.检查一下更新
+`apt-get update`
+## 2.安装Xfce4
+`apt-get install xfce4 -y`
+## 3.安装VNC
+`apt-get install vnc4server -y`
+## 4.设置VNC密码
+`vncpasswd`
+## 5.启动VNC系统环境
+`vncserver`
+## 6.修改xstartup配置文件
+`vim ~/.vnc/xstartup`
+所有的内容都替换成下面的内容。
+```
+#!/bin/sh  
+unset SESSION_MANAGER  
+unset DBUS_SESSION_BUS_ADDRESS  
+startxfce4 &amp; 
+
+[ -x /etc/vnc/xstartup ] &amp;&amp; exec /etc/vnc/xstartup  
+[ -r $HOME/.Xresources ] &amp;&amp; xrdb $HOME/.Xresources  
+xsetroot -solid grey
+```
+## 7.关闭之前开启的VNC Server窗口
+`vncserver -kill :1`
+## 8.启动VNC
+`vncserver`
+## 9.安装Firefox浏览器
+`apt-get install firefox -y`
+## 10.安装Firefox中文语言包
+`apt-get install firefox-locale-zh-hans`
+`apt-get install ttf-wqy-zenhei -y`
+PS：开放端口5901

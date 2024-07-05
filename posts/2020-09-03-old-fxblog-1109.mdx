@@ -1,0 +1,54 @@
+---
+title: "Debian8 apt-get update报错GPG error KEYEXPIRED 158784171解决办法"
+date: '2020-09-03T11:05:47Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2020-09-03T11:07:12Z'
+raw_comment_count: '0'
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=1109](https://blog.fxit.top/?p=1109)
+:::
+
+这几天重新折腾了一下吃灰已久的Debian8 vps，运行一下apt-get update却出现以下错误：
+```
+# apt-get update
+...
+W: GPG error: http://archive.debian.org jessie Release: The following signatures were invalid: KEYEXPIRED 1587841717
+```
+按照百度的办法找出了过期的key：
+```
+# apt-key list | grep expired
+pub   4096R/65FFB764 2012-05-08 [expired: 2019-05-07]
+pub   4096R/46925553 2012-04-27 [expired: 2020-04-25]
+```
+并使用
+`apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys ********`
+重新激活延期对应的key，却发现无论如何延期都还是一样的到期时间，"unchanged"......
+
+折腾了半天无果...
+
+<hr />
+
+结果今天终于在Google找到解决办法并成功解决了问题(u1s1，Google nb!)
+
+参考链接：[https://unix.stackexchange.com/questions/598344/debian-8-jessie-keyexpired-1587841717](https://unix.stackexchange.com/questions/598344/debian-8-jessie-keyexpired-1587841717)
+
+解决办法也是意料之外中的简单：
+
+编辑/etc/apt/sources.list，替换成以下即可:
+```
+deb http://http.debian.net/debian jessie main contrib 
+deb-src http://http.debian.net/debian jessie main contrib 
+
+deb http://security.debian.org/ jessie/updates main contrib
+deb-src http://security.debian.org/ jessie/updates main contrib
+```
+然后执行
+```
+sudo apt-get update
+sudo apt-get upgrade
+```
+问题就完美解决了！

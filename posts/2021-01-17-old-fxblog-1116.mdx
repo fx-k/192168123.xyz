@@ -1,0 +1,453 @@
+---
+title: "[实战]微信小程序蓝牙BLE连接esp32并发送数据"
+date: '2021-01-17T01:07:03Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2021-01-17T01:07:03Z'
+raw_comment_count: '0'
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=1116](https://blog.fxit.top/?p=1116)
+:::
+
+近期在为原来的微信小程序物联网通信新增蓝牙通信功能，在阅读无数教程之后终于写出了差不多能实现的微信小程序蓝牙通信功能。
+
+但是终究还是学浅，急匆匆将小程序审核上线后，发现IOS设备竟然无法正常连接蓝牙通信。
+
+结果就是debug了两天才解决好问题，问题就出在ios的微信小程序上不能靠mac地址来连接设备，以及一些方法的先先后后执行都是要遵循间隔时间以及顺序的，众多的问题暴露出来，不得已让我推翻之前的代码，重新开写。
+
+其实说实话看了很多教程，对新手来理解还是很困难的一件事情，尤其蓝牙通信我之前并没有对该领域有所了解，所以做好一个项目确实还是需要一定的功底，不能急于求成。
+
+话不多说，我这里尽量简单地说明一下如何实现小程序蓝牙连接并发送数据。
+
+<hr />
+
+## 一、关闭蓝牙
+可能很多人好奇，为什么第一步是关闭蓝牙呢？其实这个坑还是微信挖的（[https://developers.weixin.qq.com/community/develop/doc/000a6287404ee8c64f8888fa056800](https://developers.weixin.qq.com/community/develop/doc/000a6287404ee8c64f8888fa056800)），可以看链接提到的问题，具体不好说清楚，但是在做连接之前，最好还是先关闭一下蓝牙（反正也不耗多少时间是8(狗头)）。
+
+```
+wx.closeBluetoothAdapter({
+
+success: function(res) {
+
+console.log("断开连接")
+
+}
+
+})
+```
+
+## 二、初始化蓝牙适配器
+初始化蓝牙适配器，说白了就是用蓝牙功能之前先初始化一下，判断一下设备支不支持蓝牙、有没有开启蓝牙，不然还硬往下执行肯定就报错了。我们执行wx.openBluetoothAdapter，如果成功了就说明蓝牙功能正常，如果失败了，就直接说明蓝牙不可用（可以搞个弹窗提示用户）。
+
+```
+wx.openBluetoothAdapter({
+
+success: function(res) {
+
+//蓝牙正常
+ble_isok=1;
+
+},
+
+fail(res) {
+
+//蓝牙异常
+
+},
+
+complete(res) {
+
+//这里是蓝牙开启后要干的事情　　
+
+if (ble_isok == 1) {//这里判断一下蓝牙正不正常，正常才继续执行
+
+//下一步
+
+}
+
+}
+
+})
+```
+这里，我们可以设定一个5s的延时执行函数，5s后看一下有没有找到我们的设备，如果没有找到，那就报设备没有找到，然后停止蓝牙。
+```
+fxble_isfound =0;//初始化默认没有找到
+fxble_startsearch();//开始搜索周围的蓝牙设备，这里是下一个步骤
+setTimeout(function() {
+if (fxble_isfound == 0) {
+
+// 代表搜不到设备
+
+console.log("搜索不到设备");
+
+wx.showToast({
+
+title: '搜索不到设备',
+
+icon: 'none',
+
+duration: 2000,
+
+mask: true //是否有透明蒙层，默认为false
+
+})
+
+wx.stopBluetoothDevicesDiscovery({
+
+success: function(res) {
+
+console.log("停止搜索");
+
+}
+
+});
+
+wx.closeBluetoothAdapter({
+
+success: function(res) {
+
+console.log("断开连接")
+
+}
+
+})
+
+};
+}, 5000);
+```
+
+这样，我们就比较完美做好了初始化。
+## 三、扫描周围的蓝牙设备
+
+扫描周围的蓝牙设备，然后通过一些方法来获取指定设备的serviceID
+
+注意到Android和IOS的serviceID是不一样的，Android是MAC，IOS则是UUID，而且这个UUID还不是固定的，不同设备还不一定保证相同。这就想起了我之前写的代码，直接把serviceID写死了，肯定是要出兼容性问题的。
+
+这里对应上面的fxble_startsearch()函数。
+
+这里我因为懒得改esp32上面的代码，所以没有靠蓝牙广播里面插特殊值来判断设备，直接省事用了蓝牙名字来判断。其实这样并不好，但是在我的生产环境中已经足矣。
+
+```
+wx.startBluetoothDevicesDiscovery({
+
+services: [],
+
+success(res) {
+
+wx.onBluetoothDeviceFound(res =&gt; {
+
+var devices = res.devices;
+
+for (let i = 0; i &lt; devices.length; i++) {
+
+if (devices[i].localName == 你要找的设备名字) {
+
+fxble_isfound = 1;//标记设备找到了
+
+deviceId = devices[i].deviceId;//我这种方法的话其实这句可有可无的
+
+console.log("find" + deviceId);
+
+wx.stopBluetoothDevicesDiscovery({
+
+success: function(res) {
+
+console.log("停止搜索");
+
+}
+
+})
+
+wx.showToast({
+
+title: '设备搜索成功',
+
+icon: 'loading',
+
+duration: 2000,
+
+mask: true //是否有透明蒙层，默认为false
+
+})
+
+fxble_connect();//接着下一个阶段
+
+return0;
+
+}
+
+}
+
+});
+
+},
+
+fail(res) {
+
+console.log(res);
+
+return0;
+
+}
+
+});
+```
+
+## 四、连接蓝牙设备
+这里我们先使用wx.createBLEConnection来连接到指定的蓝牙设备，然后wx.getBLEDeviceServices获取serviceID，notify_id，write_id，read_id（其实写数据的话，只要write_id就可以了）。
+
+对应fxble_connect()函数。
+
+```
+wx.createBLEConnection({
+
+deviceId: deviceId,//获取到的deviceID
+
+success(res) {
+
+console.log("设备连接成功！");
+
+wx.showToast({
+
+title: '设备连接成功',
+
+icon: 'loading',
+
+duration: 2000,
+
+mask: true //是否有透明蒙层，默认为false
+
+})
+
+wx.getBLEDeviceServices({
+
+deviceId: deviceId,
+
+success: function(res) {
+
+console.log("设备加载成功");
+
+wx.showToast({
+
+title: '设备加载成功',
+
+icon: 'loading',
+
+duration: 2000,
+
+mask: true //是否有透明蒙层，默认为false
+
+})
+
+for (let i = 0; i &lt; res.services.length; i++) {
+
+if (res.services[i].uuid.toUpperCase().indexOf(service_id) != -1) {
+
+service_id = res.services[i].uuid;
+
+break;
+
+}
+
+}
+
+console.log("Find Services" + service_id);
+
+wx.getBLEDeviceCharacteristics({
+
+deviceId: deviceId,
+
+serviceId: service_id,
+
+success: function(res) {
+
+console.log("设备加载成功");
+
+for (let i = 0; i &lt; res.characteristics.length; i++) {
+
+let charc = res.characteristics[i];
+
+if (charc.properties.notify) {
+
+notify_id = charc.uuid;
+
+}
+
+if (charc.properties.write) {
+
+write_id = charc.uuid;
+
+}
+
+if (charc.properties.write) {
+
+read_id = charc.uuid;
+
+}
+
+}
+
+console.log("Find notify_id" + notify_id + ", write_id" + write_id + ", read_id" + read_id);
+
+setTimeout(function() {
+
+fxble_write();//下一阶段，写数据
+
+}, 1000);
+
+},
+
+fail(res) {
+
+console.log(res);
+
+}
+
+})
+
+},
+
+fail(res) {
+
+console.log(res);
+
+return0;
+
+}
+
+})
+
+},
+
+fail(res) {
+
+console.log(res);
+
+wx.showToast({
+
+title: '设备连接失败',
+
+icon: 'none',
+
+duration: 2000,
+
+mask: true //是否有透明蒙层，默认为false
+
+})
+
+return0;
+
+}
+
+})
+```
+
+
+
+## 五、写入数据
+其实已经快接近尾声了，这里有个难点就是要把字符串转换一下对应的格式（字符串转byte），然后传入buffer，不能直接发送。
+
+对应上面的fxble_write()。
+
+```
+let order = stringToBytes(writetext);
+
+let byteLength = order.byteLength;
+
+wx.writeBLECharacteristicValue({
+
+deviceId: deviceId,
+
+serviceId: service_id,
+
+characteristicId: write_id,
+
+value: order.slice(0, 20),
+
+success: function(res) {
+
+//成功
+
+fxble_close();//下一阶段，关闭连接
+
+},
+
+fail(res) {
+
+console.log(res);
+
+wx.showToast({
+
+title: '请求发送失败！',
+
+icon: 'none',
+
+duration: 2000,
+
+mask: true //是否有透明蒙层，默认为fals
+
+});
+
+}
+
+})
+
+// 字符串转byte
+
+function stringToBytes(str) {
+
+var strArray = newUint8Array(str.length);
+
+for (var i = 0; i &lt; str.length; i++) {
+
+strArray[i] = str.charCodeAt(i);
+
+}
+
+const array = newUint8Array(strArray.length)
+
+strArray.forEach((item, index) =&gt; array[index] = item)
+
+return array.buffer;
+
+}
+```
+
+## 六、关闭连接
+做完所有操作之后，就要关闭连接了，以免资源占用，常规操作了。
+
+```
+wx.closeBLEConnection({
+
+deviceId: deviceId,
+
+success(res) {
+
+console.log("断开连接成功")
+
+},
+
+fail(res) {
+
+console.log(res)
+
+console.log("断开连接失败")
+
+}
+
+})
+
+wx.closeBluetoothAdapter({
+
+success: function(res) {
+
+console.log("断开成功")
+
+}
+
+})
+```
+

@@ -1,0 +1,71 @@
+---
+title: "Ubuntu18使用锐速一键脚本导致失联卡grub的解决办法"
+date: '2020-01-06T00:19:30Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2020-01-06T00:19:30Z'
+raw_comment_count: '1'
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=1050](https://blog.fxit.top/?p=1050)
+:::
+
+最近在virmach折腾锐速，使用了三合一版本的锐速一键脚本，然后就失联了。。。连上vnc发现卡在grub无法引导，于是折腾了很久终于成功恢复引导原内核。
+
+记解决办法：
+<strong><span >问题描述：</span>在引导彻底崩溃的情况下我们曾尝试使用grub rescue手动寻找引导进入系统。这次的情况有些不同，开机找到了grub，但grub无法正确引导系统。
+<span><strong>问题特征：</strong></span>开机后进入以下界面：</strong>
+```
+GNU GRUB version x.x.xxxxx
+Minimal BASH-like line editing is supported...
+grub 
+```
+<span ><strong>第一步：找到根目录和GRUB</strong></span>
+使用ls命令查看当前可以访问的扇区：
+```
+grub  ls #这里没有4的原因：第四扇区应该是虚拟扇区
+
+(hd0), (hd0, msdos7), (hd0, msdos6), (hd0, msdos5), (hd0, msdos3), ...
+```
+继续使用ls查看每个扇区的信息，需要注意：
+```
+(hd0)≠hd0
+(hd0,msdos5)⇔(hd0,5)
+ls (hd0)⇒查看(hd0)扇区信息（盘符、空间...）
+ls (hd0)/⇒查看(hd0)扇区下内容（多了一个/）
+```
+通过挨个打印子目录内容，我们可能遇到以下两种情况：
+
+1.A目录下有boot/，boot/下还有grub/
+
+2.A目录下有boot/，B目录下有grub/
+
+造成该不同的原因是因为最初分区时的策略原因，如果按照其他教程发现<em>boot目录下没有grub</em>类似问题，有可能是在另一个独立扇区。
+
+<span><strong>第二步：加载系统内核</strong></span>
+使用命令如下：
+```
+grub  set root=hd0,A #此处不需要括号，注意A的实际值（参前）
+
+grub  set prefix=(hd0,A)/boot/grub #对应第一种情况
+
+grub  set prefix=(hd0,B)/grub #对应第二种情况
+
+grub  linux /vmlinuz root=/dev/sdaA #vmlinuz必须使用TAB补全（可能有后缀），注意A的值，sda或sdb需要看自己的实际情况
+
+grub initrd /initrd.img-xxx #TAB补全，多内核情况下版本需统一
+
+grub  boot</pre>
+如果在boot之后不幸进入了BusyBox，说明参数设置有问题，可以仔细看一下出错的Log（就在BusyBox上面）
+```
+<span ><strong>第三步：修复引导</strong></span>
+如果已经成功进入了系统，切记及时修复引导
+```
+sudo update-grub #grub情况下命令，具体参考之前的设置
+
+sudo update-grub2 #grub2命令（高版本使用grub2）
+
+sudo grub-install /dev/sda
+```

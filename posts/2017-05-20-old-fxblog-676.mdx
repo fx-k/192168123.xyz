@@ -1,0 +1,159 @@
+---
+title: "实战！使用nginx进行ssl反向代理＋http跳转https，为你的网站加速！"
+date: '2017-05-20T22:15:29Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2017-05-20T22:15:29Z'
+raw_comment_count: '0'
+image: https://oss.192168123.xyz/image/old-fxblog-img/cover/2d83e91fb4e1111d09071d6c4498e357.jpg
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=676](https://blog.fxit.top/?p=676)
+:::
+
+前言：博主之前打算使用apache进行反向代理，发现既难折腾，又不适合做反向代理，一堆头疼的问题，于是博主索性重新回到nginx的怀抱了~~~
+
+<hr />
+
+教程很简单，请直接打开站点的conf配置文件，或者在nginx.conf里面http段include也可以~
+
+PS：
+
+1. 需要使用ssl请准备好为nginx的crt和key文件，不需要ssl的请用#注释掉或者删掉ssl段代码。
+
+2. 请将代码中的实例域名替换为你自己的域名！
+
+<hr />
+
+
+
+<hr />
+
+代码讲解：
+
+1.需要使用80和443端口，80做跳转，443做反向代理的服务器（什么?只开放443端口？去百度吧，之前看过好像可以用error page进行处理的）
+
+2.本代码分为两部分，上部分是用80端口进行http强制跳转https访问，下部分是反向代理~
+
+3.一言不合就直接扔代码！
+
+应用一：为放在海外的网站提速，需要将网站域名（以下举例为a.com）解析到一个加速服务器，服务器上使用nginx进行反向代理海外服务器（以下举例为b.com）。
+
+代码一：
+```bash
+## http跳转https ##
+server {  
+    listen 80;  
+    server_name a.com;  
+
+    rewrite ^(.*)$  https://$host$1 permanent;  
+}  
+## Start 反向代理 Powered by FXIT! ##
+server {
+    listen 443;
+    server_name  a.com;
+
+	## start SSL段 ##
+    ssl                  on;
+    ssl_certificate      ssl/a.com.crt;
+    ssl_certificate_key  ssl/a.com.key;	
+	## end SSL段 ##
+	
+	
+    access_log  logs/a.com.access.log;
+    error_log  logs/a.com.error.log;
+    root   html;
+    index  index.html index.htm index.php;
+
+    ## send request back to apache ##
+    location / {
+        proxy_pass  https://b.com:443; ## 如果源站不支持https，请使用http://b.com ##
+
+        #Proxy Settings
+        proxy_redirect     off;
+        proxy_set_header   Host             $host;
+        proxy_set_header   X-Real-IP        $remote_addr;
+        proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+        proxy_max_temp_file_size 0;
+        proxy_connect_timeout      90;
+        proxy_send_timeout         90;
+        proxy_read_timeout         90;
+        proxy_buffer_size          4k;
+        proxy_buffers              4 32k;
+        proxy_busy_buffers_size    64k;
+        proxy_temp_file_write_size 64k;
+   }
+}
+## End 反向代理 Powered by FXIT! ##
+```
+
+<hr />
+
+应用二：某个网站是非80端口，需要访问http://a.com来访问非80端口的网站（以下举例为b.com:666）
+
+代码二：
+```bash
+## http跳转https ##
+server {  
+    listen 80;  
+    server_name a.com;  
+
+    rewrite ^(.*)$  https://$host$1 permanent;  
+}  
+## Start 反向代理 Powered by FXIT! ##
+server {
+    listen 443;
+    server_name  a.com;
+
+	## start SSL段 ##
+    ssl                  on;
+    ssl_certificate      ssl/a.com.crt;
+    ssl_certificate_key  ssl/a.com.key;	
+	## end SSL段 ##
+	
+	
+    access_log  logs/a.com.access.log;
+    error_log  logs/a.com.error.log;
+    root   html;
+    index  index.html index.htm index.php;
+
+    ## send request back to apache ##
+    location / {
+        proxy_pass  https://b.com:666; ## 如果源站不支持https，请使用http://b.com:666 ##
+
+        #Proxy Settings
+        proxy_redirect     off;
+        proxy_set_header   Host             $host;
+        proxy_set_header   X-Real-IP        $remote_addr;
+        proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+        proxy_max_temp_file_size 0;
+        proxy_connect_timeout      90;
+        proxy_send_timeout         90;
+        proxy_read_timeout         90;
+        proxy_buffer_size          4k;
+        proxy_buffers              4 32k;
+        proxy_busy_buffers_size    64k;
+        proxy_temp_file_write_size 64k;
+   }
+}
+## End 反向代理 Powered by FXIT! ##
+```
+
+<hr />
+
+应用三：某个内网网站（以下举例为b.com）只能内网访问（或者说外网访问不到），想在外网通过访问a.com达到访问b.com的目的。
+代码三：和 代码一 一样~
+
+<hr />
+
+
+
+<hr />
+
+以上，教程结束~
+
+另外，繁星博客招作者~欢迎互相交流，有意者可加QQ：1229488344

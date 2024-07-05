@@ -1,0 +1,51 @@
+---
+title: "360字体源已挂，给wordpress更换字体源~"
+date: '2016-12-11T19:55:52Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2019-01-12T16:51:01Z'
+raw_comment_count: '4'
+image: https://oss.192168123.xyz/image/old-fxblog-img/cover/640d4b8ca6b0b2b1e04c306ba189bbba.jpg
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=541](https://blog.fxit.top/?p=541)
+:::
+
+这几天博主一直郁闷fonts.useso.com（360字体源）加载实在是太！太！太！慢！！！！了！！！！
+
+于是萌生了给wordpress换字体源的想法。
+
+<hr />
+
+其实升级后的wordpress已经换好了字体源，即从Google字体换成了360cdn的字体，但是殊不知，威风一时的360cdn字体也变得非常慢了，虽说对前端没啥影响，但是对后端体验实在是。。不可描述！！
+
+<hr />
+
+方法是参见以前广为流传的wordpress教程（更换Google字体），更改主题函数。
+
+将下面的代码添加到主题的 functions.php 即可在后台和登录界面更改字体加载来源：
+```php
+/**
+ * Plugin Name: WPDX Replace Open Sans
+ * Plugin URI:  https://www.wpdaxue.com/dw-replace-open-sans.html
+ * Description: Change the load address of Open Sans.
+ * Author:      Changmeng Hu
+ * Author URI:  https://www.wpdaxue.com/
+ * Version:     1.0
+ * License:     GPL
+ */
+function wpdx_replace_open_sans() {
+  wp_deregister_style('open-sans');
+  wp_register_style( 'open-sans', '//fonts.proxy.ustclug.org/css?family=Open+Sans:300italic,400italic,600italic,300,400,600' );
+  if(is_admin()) wp_enqueue_style( 'open-sans');
+}
+add_action( 'init', 'wpdx_replace_open_sans' );
+```
+
+目前fonts.proxy.ustclug.org的服务还算稳定，所以暂且换成这个了，有条件的朋友也可以自己搭建，修改第十四行就行了~
+
+<hr />
+
+至此教程到此结束，大家想吐槽的有疑问的欢迎下方留言，欢迎关注繁星博客，bye~~

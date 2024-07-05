@@ -1,0 +1,55 @@
+---
+title: "多说评论框背景图片设置"
+date: '2016-08-12T15:47:06Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2019-01-12T16:51:02Z'
+raw_comment_count: '3'
+image: https://oss.192168123.xyz/image/old-fxblog-img/cover/794e29985d9c336258a5d2effd688f13.jpg
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [http://blog.fxit.top/?p=324](http://blog.fxit.top/?p=324)
+:::
+
+哈哈，博主我又来更新辣~<img  src="https://oss.192168123.xyz/image/old-fxblog-img/e79650b72148e66f4ae1d1ade92fb672.jpg" alt="20150709130239_2eiPJ.thumb.700_0" width="99" height="99" />
+
+本次给大家带来的更新内容为：多说评论框的背景图片设置
+
+大家知道多说评论框本来是没有背景的，博主看着不是很漂亮，于是美化了一下。
+
+其实很简单的，就在后台的多说【个性化设置】中的【基本设置】，找到【自定义CSS】，把博主给的css美化代码复制进去然后按保存就阔以辣~~~~~~~
+
+++++++++++++++++++++++++++++
+
+效果：可以看博主的博客评论框，已经设置好了背景，萌萌da~
+
+++++++++++++++++++++++++++++
+
+代码：
+```css
+.ds-textarea-wrapper.ds-rounded-top{background: #这里写评论框的背景颜色代码 url(图片外链复制到这里) no-repeat right bottom !important;}
+
+```
+
+
+
+
+成品代码：
+```css
+.ds-textarea-wrapper.ds-rounded-top{background: #FFFFFF url(http://cloud.fxit.top/index.php?share/fileDownload&amp;user=admin&amp;sid=DFIcesKp) no-repeat right bottom !important;}
+```
+
+++++++++++++++++++++++++++++
+注意事项：
+1.背景图不能太大，最好是正方形的，最好用透明背景的png格式，否则会和背景颜色冲突不太好看。
+2.图片链接哪个（）不能删除，图片链接不要有空格，开头是http://或者https://   。
+
+
+温馨提示：
+1.图片外链可以放在虚拟空间根目录里然后格式就是：http://你的域名/你的图片名（要带后缀）。 图片外链建议去找一些图库（推荐七牛云）然后复制外链即可，这样可以减小服务器压力，但是稳定性肯定不如放自己空间里那么好。如果实在不会可以联系站长，把图片给我我可以用我的服务器给你弄外链。
+2.颜色代码是一个#，请确定颜色代码处理好之后是一个#开头的。颜色代码可以去网上找，也不难，建议浅颜色一点的可以突出背景图。
+
+++++++++++++++++++++++++++++
+好了，本次就介绍到这里，欢迎留言、分享、关注哟~

@@ -1,0 +1,66 @@
+---
+title: "【badusb攻击】HID注入!ducky红外遥控＋内存卡实现21个攻击实例！"
+date: '2019-04-06T19:21:38Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2019-04-06T19:21:38Z'
+raw_comment_count: '0'
+image: https://oss.192168123.xyz/image/old-fxblog-img/cover/b8d590f6be3b781e07eb46c3cddcdb22.jpg
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=1000](https://blog.fxit.top/?p=1000)
+:::
+
+最近开始玩badusb，本来打算买个esp8266的板子的，后来发现在学校不能光明正大地掏出手机使用，以及固件方面的不太完善，于是打算入手可以插入tf卡的板子。但是一个板子就很贵，而且只能实现一种代码，于是找到了红外遥控的这个，可以21个切换，可以说是很不错了！
+
+<hr />
+
+博主魔改版后的板子图：
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/9129bd4122fe5832a282bc9d9ab6a900.jpg" alt="qq_pic_merged_1554549361779" width="576" height="1024" />
+
+<hr />
+
+## 使用
+使用方法其实肥肠简单，特别适合新手。
+
+首先把卡拔下来，然后修改tf卡里面的对应数字的txt就行。
+
+注意使用的是ducky类型的脚本。
+
+<hr />
+
+## 注意事项
+1、将TF卡格式化成fat32格式。
+2、此22个txt文件解压到卡的根目录。
+3、此22个TXT文件名字不可修改。
+4、如需修改代码，请打开记事本文件修改内部的命令即可。
+5、huapidan.txt文件是默认执行的脚本，一般情况下留空即可。否则插入即开始执行。
+6、文件a-u分别对应遥控器ch-到9（从上往下竖着数）
+
+<hr />
+
+## 示例
+```
+DELAY 3000
+GUI r
+DELAY 500
+STRING cmd
+ENTER
+ENTER
+DELAY 800
+STRING FXIT.MoneJ
+ENTER
+```
+这里的意思就是按下win键＋r，输入cmd回车，然后输入字符FXIT.MoneJ
+
+<hr />
+
+## 思考
+很多时候这种攻击是猝不及防的，并且杀软是无法处理的（前提是你的payload免杀）。
+
+用法可以百度，有很多。
+
+最简单的可以用来做恶作剧，进一步可以窃取一些资料，更甚者可以植入后门进行远程攻击。

@@ -1,0 +1,88 @@
+---
+title: "安装配置Shadowsocks Manyuser + SS-Panel"
+date: '2016-09-15T12:59:16Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2016-09-15T13:01:23Z'
+raw_comment_count: '1'
+image: https://oss.192168123.xyz/image/old-fxblog-img/cover/bb56a06bc8c4465131df7c0788360fdd.jpg
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=424](https://blog.fxit.top/?p=424)
+:::
+
+首先，今天中秋节祝大家节日快乐~
+
+本次给大家带来的是【安装配置Shadowsocks Manyuser + SS-Panel】，是配置shadowsocks（简称ss）的多用户（manyuser）的面板配置，从前端到后端都非常全面。
+
+这篇文章也曾给博主带来许多帮助，因为这篇文章在百度上比较难找到而且这篇文章可谓写的很全面，所以博主在这里分享给各位有需要的人，同时也方便博主可以随时看看。
+
+<hr />
+
+为了方便大家找下载链接，博主把所有的文件链接都放到了文章末尾。
+
+<hr />
+
+SS-Panel是由Orvice写的一款配合ShadowsocksManyuser的前端程序。这货是用世界上最好的语言PHP写成的，所以你需要一个支持php的VPS。由于用了奇怪的新特性所以只支持PHP5.4以上的版本。当然为了存储用户数据还需要mysql的支持。
+
+SS-Panel的安装很简单，下载<del>这个ZIP包</del>（由于作者现在在开发V3版本但是还没有完成，所以旧的链接下载的未完成版本不能使用现有的配置方法，请下载SS-Panel V2使用。）然后解压放到Web目录（绑定个域名或者子目录啥的都行，最好是https的，原因不解释），建立一个数据库和一个用户，赋予权限之后，打开解压的目录，将lib/config-simple.php改名成config.php然后修改下配置。必须改的配置是数据库用户、数据库密码、数据库名和本站URL，其他的站点名称之类的看心情修改。签到数值神马的直接参考配置文件中的注释就可以。然后将sql目录中的所有sql文件都导入配置文件中指定的数据库。没有问题的话这个SS-Panel就搭建好可以访问了。管理地址是/admin 默认的用户名、密码是admin 12345678 不知道是作者犯懒还是别的神马原因，admin用户的用户名密码想要修改只能去改数据库。。。不过也不是很麻烦啦。具体方法文章后面再介绍。
+
+前端搭建好了，木有后端支持神马都是白搭。后端搭建的方法略微繁琐但是其实也是很简单的。首先需要安装一些依赖。我用的CentOS，于是直接输入以下代码：
+```bash
+yum -y install python-pip m2crypto
+pip install cymysql
+```
+
+就可以啦。然后找个目录把ShadowSocks Manyuser下载下来，输入以下代码：
+
+
+```bash
+git clone -b manyuser https://github.com/mengskysama/shadowsocks.git
+```
+之后进入目录shadowsocks/shadowsocks里面，修改Config.py，指定数据库用户、密码、数据库之后就可以咯~运行
+
+
+```bash
+python server.py
+```
+
+
+后端程序就跑起来了~但是这里是坑了我的第一个地方。一开始的时候按照网上的办法给SS-Panel和ShadowSocksManyuser各自建立了一个数据库和一个用户，然后都装好后发现SS-Panel的配置中对于后端的配置只有名称、地址等几项，并没有配置管理地址、密码什么的的地方，让我百思不得其解，后来在V2EX上的某个帖子上发现：这俩货应该用同一个数据库！想想也是，SS-Panel本来就是一个前端的壳子而已，用同一个数据库也是应该的。。。研究了一下发现ShadowSocksManyuser对于用户的端口密码的控制是在user这个表中的，而SS-Panel的user这个表和SSManyuser的结构基本上是一样的。所以配置好SS-Panel之后配置ShadowSocks Manyuser的时候只需要填写SS-Panel的数据库用户密码神马的就搞定了。
+
+第二个坑在于，我配置完SS-Panel和manyuser之后发现，这货注册新用户之后分配的端口是从5开始。。。5 10 15巴拉巴拉。。。当时我就震惊了，这么不人性化的设计，这样迟早会吧80神马的端口都分出去，迟早出问题。。。于是就找SS-Panel或者ShadowSocksManyuser怎么修改分配的端口范围，后来发现问题出在我自己这里，SS-Panel默认的数据库中带有一个用户，这个用户默认的端口是50000，之后新建的用户都会以第一个用户为基准端口号递增。我第一次装完后直接删掉了测试用户，所以端口号就是从0开始递增得了。手动修改数据库或者重新导入数据库，总之吧uid最低的用户的端口设置成为50000或者其他的，之后的用户端口就会依次递增啦。当然这个用户密码还是建议修改一下~
+
+<del>第三个不能算坑的坑，这货admin的用户名密码要手动修改数据库。。。还好数据库中的密码只是简单的MD5了一次而已。所以直接戳开数据库，打开ss_admin表直接诶修改里面的admin_name email和pass就可以了。pass是明文密码一次MD5得到的，很容易算出来。</del>
+
+150706 update: 新版的SS-Panel数据库中不再单独存储Admin用户名和密码，而是和user共用一套用户名和密码。admin这个表中只存了user中作为管理员的user_id，所以想要添加管理员的话就去数据库中增加对应的user_id就可以了。默认ID为1的用户是管理员。
+
+还有一个坑就是如果想用supervisor之类的守护程序来保证ShadowSocksManyuser后端的稳定运行的话，在配置文件的command里面不能只写 python &lt;PATH&gt;/server.py   我一开始就是这么写的，然后发现后端总是连接不上，看了一下Supervisor的日志发现这货直接error然后退出了。。。仔细看了看wiki之后发现command里面要加一个参数才行。。。所以command一行应该变成类似这样
+```
+command = python PATH/server.py -c PATH/config.json
+```
+这样就可以愉快的用Supervisor保证后端持续运行了。config.json里面带一个用户名密码端口，然而不用管它，这个密码和端口连接不上的。如果你要是觉得不保险的话可以把这个也改掉。
+
+有人可能会问，想要配置多节点怎么办？很容易。。。只要mysql里面允许数据库的用户远程登录（建议用一个单独的用户，给比较少的权限），然后然后再配置后端的时候数据库地址填写前端SS-Panel所在的服务器的地址，然后数据库用户名密码什么的和之前的一样就可以了。然后再去SS-Panel配置里面加上这个新节点的名称和地址就可以了。ShadowSocksManyuser会自动去远程数据库中读取用户的端口密码等值。对于同一个用户来说，在所有节点的端口和密码都是相同的。
+
+<hr />
+
+下载区（密码为本博客地址：blog.fxit.top）：
+
+【SS-Panel V2】下载链接：
+
+长网址（稳定）：[http://cloud.fxit.top/index.php?share/file&amp;user=admin&amp;sid=XNRJHLmZ](http://cloud.fxit.top/index.php?share/file&amp;user=admin&amp;sid=XNRJHLmZ)
+
+短网址（好记）：[http://dwz.fxit.top/sspanelv2](http://dwz.fxit.top/sspanelv2)
+
+&nbsp;
+
+【git地址（防止文件失效于是也下载下来了给大家使用）】：
+
+长网址（稳定）：[http://cloud.fxit.top/index.php?share/file&amp;user=admin&amp;sid=qCKJfGoh](http://cloud.fxit.top/index.php?share/file&amp;user=admin&amp;sid=qCKJfGoh)
+
+短网址（好记）：[http://dwz.fxit.top/sspanel](http://dwz.fxit.top/sspanel)
+
+<hr />
+
+以上介绍到这里，祝大家中秋快乐~~~

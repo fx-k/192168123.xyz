@@ -1,0 +1,81 @@
+---
+title: "实力教程！让thinkphp在nginx完美运行~"
+date: '2017-05-20T21:49:20Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2017-05-20T21:49:20Z'
+raw_comment_count: '0'
+image: https://oss.192168123.xyz/image/old-fxblog-img/cover/97ca0430c6bd0fbf5560ba8908334fe7.jpg
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=670](https://blog.fxit.top/?p=670)
+:::
+
+前言：博主最近用了腾讯云nginx做了反代加速，速度还可观，但是thinkphp却不支持nginx了。难道真的不支持吗？别慌，让我们配置一个能运行thinkphp的nginx环境。
+
+请准备好站点conf配置文件。
+
+<hr />
+
+<strong>为何nginx不支持thinkphp？</strong>
+
+ThinkPHP支持通过PATHINFO和URL rewrite的方式来提供友好的URL，只需要在配置文件中设置 'URL_MODEL' =&gt; 2 即可。在Apache下只需要开启mod_rewrite模块就可以正常访问了，但是Nginx中默认是不支持PATHINFO的，所以nginx默认情况下是不支持thinkphp的。不过我们可以通过修改nginx的配置文件来让其支持thinkphp。
+
+<hr />
+
+<strong>让nginx支持pathinfo，支持thinkphp</strong>
+
+1.打开站点配置conf文件，如图：
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/76763014591fd182f83751cad894d464.png" alt="20140711145447034" width="500" height="338" />
+
+2.注释掉配置文件中那些被我圈出来的语句（`location ~ \.php$ {……}`这一段里面的），我们将对这部分进行重写！如图：
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/be7c8b0f7b3e399df359a7e8618fc909.png" alt="20140711145520854" width="500" height="290" />
+
+3.将重写后的代码添加进去，代码如下。
+```bash
+location / {        
+    if (!-e $request_filename) {
+        rewrite  ^/(.*)$  /index.php/$1  last;
+                break;
+        }
+}
+ 
+location ~ \.php {
+    fastcgi_pass 127.0.0.1:9000;
+    fastcgi_index index.php;
+    include fcgi.conf;（改成fastcgi_params或fastcgi.conf）
+    set $real_script_name $fastcgi_script_name;
+    if ($fastcgi_script_name ~ "^(.+?\.php)(/.+)$") {
+        set $real_script_name $1;
+        set $path_info $2;
+    }
+    fastcgi_param SCRIPT_FILENAME $document_root$real_script_name;
+    fastcgi_param SCRIPT_NAME $real_script_name;
+    fastcgi_param PATH_INFO $path_info;
+}
+```
+如图：
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/8ef0af86dc514ed417a066b1ca014775.jpg" alt="20140711145355890" width="500" height="287" />
+
+<hr />
+
+<strong>注意事项</strong>
+
+1.一定要注释到原来的`location ~ \.php$ {……}`这一段里面的代码
+
+2.不要漏掉｛｝
+
+3.Nginx配置文件里 if 和后面的括号之间要有一个空格，不然会报unknown directive错误。
+
+<hr />
+
+好了，本次教程到此结束。
+
+本博文由博主重新整理排版，好吧请原谅本博文参考了其他博主的博文，给大家原文链接在下面~
+
+另外，博主这段时间将很少打理博客（因为学业原因），将在本暑假重新恢复（包括MC服务器），尽情期待暑假的另一个崭新的我们！

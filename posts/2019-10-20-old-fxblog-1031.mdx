@@ -1,0 +1,25 @@
+---
+title: "[随记]解决 screen 中文乱码"
+date: '2019-10-20T00:53:41Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2019-10-20T00:53:41Z'
+raw_comment_count: '0'
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=1031](https://blog.fxit.top/?p=1031)
+:::
+
+找到screenrc文件(输入whereis screenrc可以查看文件的路径)
+
+解决办法：在 ~/.screenrc 里加入:
+```
+defutf8 on
+
+defencoding utf8
+
+encoding UTF-8 UTF-8
+```
+新建screen，则能正确显示。

@@ -1,0 +1,71 @@
+---
+title: "【badusb攻击】最便宜的HID注入工具——digispark以及更新bootloader教程"
+date: '2019-04-06T19:45:58Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2019-04-06T19:45:58Z'
+raw_comment_count: '0'
+image: https://oss.192168123.xyz/image/old-fxblog-img/cover/2d4f240043d69b69239c22add32c5c1f.png
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=1004](https://blog.fxit.top/?p=1004)
+:::
+
+最近开始折腾badusb攻击，在买了上一篇所说的ducky之后，也买了几块digispark玩玩。
+
+<hr />
+
+## 介绍
+digispark是最小的可以用于做HID攻击的开发板，它可以使用Arduino进行编程，模拟成HID设备以进行攻击，使用方法和ducky大同小异。
+
+主要是价格十分便宜，大概某宝我找的最便宜是6.6元包邮一个，我觉得海星。
+
+但是！注意！注意！注意！
+
+这里有个坑就是，digispark不能直接使用ducky的攻击代码，必须要转换。。
+
+什么？！你问我怎么转？github上面逛两圈可能会找到，但是比较麻烦，我觉得其实不如手撸快。
+
+具体的参数如下：
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/9bf8d12b22a88c336379a1185485d6a3.jpg" alt="qq_pic_merged_1554550058547" width="620" height="610" />
+
+<hr />
+
+## 更新bootloader
+使用的过程这里就不多说了，相信很多人百度都能找到digispark的使用教程。
+
+但是很多人买回去发现代码写好之后只能执行一次，拔出来再插进去就不会执行了。。。
+
+这个其实是bootloader没有更新的缘故，不是板子问题。。
+
+部分店铺买的可能更新过了所以就存在大家说的玄学问题了2333
+
+其实完全可以自己更，肥肠简单的说！
+
+首先感谢这位dalao提供的方案，本站更新bootloader的方法源于[https://www.iot-experiments.com/micronucleus-bootloader-upgrade/](https://www.iot-experiments.com/micronucleus-bootloader-upgrade/)
+
+感谢[https://blog.csdn.net/sxhexin/article/details/87914649](https://blog.csdn.net/sxhexin/article/details/87914649)对原教程进行了翻译以及进一步的解释。
+第一步。下载相关软件包
+下载[https://github.com/micronucleus/micronucleus/archive/master.zip](https://github.com/micronucleus/micronucleus/archive/master.zip)到本地并解压
+
+第二步，卸载所有libusb相关的驱动
+
+第三步，插入DigiSpark/DigiSparkPro，应该能在设备管理器里看到一个未知设备（如果自动安装驱动了，再手动删除）
+
+第四步，打开 \windows_driver_installer\zadig_2.1.2.exe
+
+第五步，Device 里选 Load Preset Device ，下面的下拉框选择 unknown device ，再下面的选择 libusb-win32 (v1.2.6.0) ，然后 Install Driver
+
+第六步，将 \commandline 下面的所有文件copy到 \upgrade\releases 文件夹下
+
+第七步，拔掉DigiSpark/DigiSparkPro
+
+第八步，在 \upgrade\releases 下打开命令提示符，执行 micronucleus --run upgrade-t85_default.hex
+
+第九步，插入DigiSpark/DigiSparkPro，开始刷固件
+
+完成
+PS：也可博主使用的软件版本，博主已经上传，下载链接在本文末尾。

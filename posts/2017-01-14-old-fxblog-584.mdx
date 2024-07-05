@@ -1,0 +1,32 @@
+---
+title: "解决Hacklog远程附件在wordpress媒体库无法添加媒体的方法"
+date: '2017-01-14T22:56:28Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2017-01-14T22:59:57Z'
+raw_comment_count: '9'
+image: https://oss.192168123.xyz/image/old-fxblog-img/cover/6c9b1416f38b2482b5c17169f2679a22.jpg
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=584](https://blog.fxit.top/?p=584)
+:::
+
+刚刚才发了一篇博文，发现博客的媒体库添加图片却没有显示，仔细看，图片链接既不是正常的wordpress图片外链，也不是FTP服务器的外链，把Hacklog Remote Attachment插件禁用，一切正常，排除wordpress程序问题，估计是Hacklog Remote Attachment问题。
+
+博主一开始也没啥办法。。咋呢，博主想联系作者，反馈问题，但是半天联系不上，好吧，只能靠自己了。。。
+
+于是，博主看到自己在2016年12月31号还能正常使用，但是2017年1月14日却不行了，忽然想到是不是因为过了一年，而这个插件不能自动创建目录导致失败。
+
+所以，博主开始在远程附件上创建“2017”文件夹并在其下建立“01”文件夹代表一月（这是wordpress的文件夹命名规则），然后把博客服务器的文件传输到远程创建的文件夹内，如图。
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/22eee5ae98065ea02f1af12c0ffbf160.png" alt="2017-01-14_223943" width="823" height="223" />
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/6c94df7acd34ef0c0bf0c04ed271dcf4.png" alt="2017-01-14_224014" width="813" height="346" />
+
+回来wordpress上传图片，正常了！！！
+
+<hr />
+
+希望博主钻研出的一点点小成功可以给大家带来帮助，欢迎到下方留言处踩场子哟~因为这个插件现在已经不更新了，看来以后每过一年（有可能甚至一个月）都要去ftp服务器更新文件夹了2333~~~人无完人，插件亦是吧2333~~

@@ -1,0 +1,33 @@
+---
+title: "【更新】一条css，屏蔽掉畅言广告！"
+date: '2018-07-22T22:16:38Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2019-01-12T16:50:54Z'
+raw_comment_count: '0'
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=831](https://blog.fxit.top/?p=831)
+:::
+
+最近，畅言貌似也盯上本站了。。。评论框居然出现了畅言的广告。。。
+
+百度找了几段代码，有一些被官方x了。
+
+下面分享一段可以用的（不排除以后被x）：
+
+更新：2018 .10.13最新屏蔽悬浮窗的JS：
+```js
+//CHANGYAN-gun!
+window.onload=function (){
+var div = document.getElementById("pop_ad");
+div.style.display = "none";
+}
+```
+CSS:
+```css
+#feedAv{ margin-top: -250px!important;transform: scale(0);}
+```
+将上面这条css加入到你的主题style.css里面，刷新缓存，即可！

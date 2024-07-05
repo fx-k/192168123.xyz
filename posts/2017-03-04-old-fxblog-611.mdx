@@ -1,0 +1,62 @@
+---
+title: "wordpress使用固定链接教程，插件301跳转解决原链接404的问题"
+date: '2017-03-04T15:16:50Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2017-03-04T15:17:56Z'
+raw_comment_count: '2'
+image: https://oss.192168123.xyz/image/old-fxblog-img/cover/5ab4c27f1e7f76a891443af2f3041f98.jpg
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=611](https://blog.fxit.top/?p=611)
+:::
+
+前言：
+
+今天刚刚打算优化一下博客seo，打算做个博客伪静态，把文章动态页面改为xxx.html（效果如本博客的文章页面所示），听说这样有利于seo，可是博主想到一个很严重的问题，如果更换了固定链接，原链接就失效了，而百度等搜索引擎收录了我的页面，导致页面404，这也是对搜索引擎和访客浏览的不友好了。
+
+于是，博主找到了一个wordpress插件，还不错，忘记在哪里找到的了，先对原作者表示感谢~~这里博主特此分享给大家~~
+
+<hr />
+
+1.下载插件，进入wordpress后台上传插件并启用。
+
+2.在wordpress后台，点击设置-WP固定链接迁移。
+
+3.在 旧的固定链接结构 中填写你以前的固定链接结构，博主提醒：只需要填写后缀即可，不知道的可以在wordpress后台点击 设置-固定链接 查看。博主原来的固定链接是：https://blog.fxit.top/?p=123 ，就填入 /?p=123，点击 更新设置 即可，如图。
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/3adaf7c8520a4e6798ce0d574436e7b6.png" alt="WP Permalinks Migration" width="672" height="285" />
+
+4.在wordpress后台点击 设置-固定链接 修改你喜欢的链接结构，或者像博主一样，自定义~
+%year% 文章发表的年份，四位数，如 2004
+%monthnum% 月份，如 05
+%day% 天，如 28
+%hour% 小时，如 15
+%minute% 分钟，如 43
+%second% 秒，如 33
+%postname% 文章标题的别名 (编辑文章/页面时的别名栏)
+%post_id% 文章的唯一ID，如 423
+%category% 分类的别名 (新建/编辑分类时的别名栏)
+%tag% 标签的别名(新建/编辑标签时的别名栏)
+%author% 作者的别名
+【以上内容来自网络】
+
+以上就是具体自定义的信息，博主比较喜欢简洁的，就来个/%post_id%.html ，这样生成的就有后缀了，当然你也可以随意更改后缀，不过建议html为后缀，利于seo嘛~
+
+博主修改好了，如图，点击 保存更改 搞定！
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/7980b5aa2c9c04130d00077616454468.png" alt="gdlj" width="946" height="330" />
+
+<hr />
+
+以上教程初步。
+
+为什么有的人打开新链接出现404呢？这是由于没有开启伪静态的原因了。
+
+博主也遇到这个情况，开启伪静态很简单，百度一下，一堆，博主是nginx，直接在nginx.conf配置文件加入：
+`try_files $uri $uri/ /index.php?$args; `
+重启，即可~
+PS：此插件不影响sitemap的生成，并且sitemap会自动更新为新的固定链接~
+对于使用vestacp的面板并且开启了ssl的，请期待下一篇博文，博主会详细讲解vestacp的新坑（vestacp面板如何使用伪静态）~~

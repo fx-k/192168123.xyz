@@ -1,0 +1,158 @@
+---
+title: "小米手环3美化/修改资源包教程（含加入二维码教程）"
+date: '2018-12-16T12:28:02Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2019-01-12T16:50:54Z'
+raw_comment_count: '0'
+image: https://oss.192168123.xyz/image/old-fxblog-img/cover/196f9016e7a6aab4e8764900a914319d.jpg
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=936](https://blog.fxit.top/?p=936)
+:::
+
+小米手环3自定义资源包教程 感谢 BrackRat 、 kindyear 等人作出的巨大贡献！
+
+本文参照他们的教程和资源进行更为详细的讲解。
+
+注意：本教程侧重于讲刷资源包res，不过多的进行刷固件的讲解（并且不建议刷固件，容易砖，一般修改res已经可以达到你预期的效果了）。
+
+<hr />
+
+## 12月23日 更新
+温馨提醒：如果自己改了res（二维码等）刷入res进去后发现手环显示不出来，则多半是图片有黑白以外的颜色的原因。
+
+出现这种原因，首先就要检查修改后的图片尺寸是否与原图片一样。
+
+根据[brackrat](https://mibbs.brackrat.top/)的教程，大家可能多用画图这个工具来修改资源包。但是！！！这有个坑！就是使用画图的时候黑笔涂掉或者其他操作可能会出现其他颜色的色块！
+
+如何解决呢？很简单，使用ps或者其他工具来操作，或者将图片处理为黑白滤镜即可！（处理后记得比对尺寸大小！）
+
+此外，[brackrat](https://mibbs.brackrat.top/)贡献出了在线解包/打包res的工具，地址：[http://res.brackrat.top:20396/](http://res.brackrat.top:20396/) 大家可以更方便的在多种客户端进行操作了！
+
+<hr />
+
+## 12月16日 更新
+最近，小米更新了小米运动app，并且同时更新了米环3/3NFC的固件
+也就是说，原来的"开发板/内测版" 现在已经成为正式版了
+为了避免混淆，按照官方命名规则，将上个版本叫做V44，目前最新的RES新版资源包为V46！
+所以，如果你更新了小米运动软件，那么你在连接手环时会被自动更新为新版固件，如果你再次刷入V44版本的资源包，会导致出错，需要刷入V46的新版资源包才可以使用！
+
+不过本次更新不大，博主没升级，期待下次大更~
+
+新版V46资源已经在[https://mibbs.brackrat.top/](https://mibbs.brackrat.top/)更新，下载地址：[http://pan.fxit.top/index.php?share/file&amp;user=1&amp;sid=aqj8Fsmg](http://pan.fxit.top/index.php?share/file&amp;user=1&amp;sid=aqj8Fsmg)
+
+<hr />
+
+## 一、资源准备
+1.一台安卓手机（Android5.0以上版本）
+
+2.一个已经绑定小米运动且充满电的Miband3/Miband3 NFC（没电可能导致刷着刷着关机）
+
+3.小米手环3对应固件版本的RES资源包（可在[https://miband.brackrat.top/](https://miband.brackrat.top/)下载，示例教程的资源包下载地址：[http://pan.fxit.top/index.php?share/file&amp;user=1&amp;sid=7AWaE9SB](http://pan.fxit.top/index.php?share/file&amp;user=1&amp;sid=7AWaE9SB)）
+
+4.安卓端的刷入res到小米手环3的APP：Gadgetbridge（可在[http://dwz.fxit.top/16](http://dwz.fxit.top/16)或[http://pan.fxit.top/index.php?share/file&amp;user=1&amp;sid=ZNBPa7Jn](http://pan.fxit.top/index.php?share/file&amp;user=1&amp;sid=ZNBPa7Jn)下载）
+
+5.（可选）电脑win端的米环模拟器（如果需要修改资源包，即打包和解包RES进行个性化修改的，需要下载米环模拟器）（可在[http://dwz.fxit.top/17](http://dwz.fxit.top/17)或[http://pan.fxit.top/index.php?share/file&amp;user=1&amp;sid=RWa9dn62](http://pan.fxit.top/index.php?share/file&amp;user=1&amp;sid=RWa9dn62)下载）
+
+<hr />
+
+## 二、软件配置
+1.打开小米运动，开启蓝牙广播，用来让Gadgetbridge发现你的手环。
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/995bbfa06578d67b8701a17c0bd41a2f.png" alt="Snipaste_2018-12-16_11-39-43" width="715" height="631" />
+
+然后，在小米运动中将你的手环解绑（解绑数据配置还在，请放心）
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/95496b4ef0597d6e813d6362d77f52f4.png" alt="Snipaste_2018-12-16_11-41-18" width="548" height="850" />
+
+至此，小米运动端配置完成。
+
+2.打开Gadgetbridge。点击右下角➕号，将你的手环3和手机靠近，就可以搜到手环3然后像绑定小米运动一样绑定手环3到Gadgetbridge就可以。
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/d1a7f2f96b373d510739497402b11bbd.png" alt="Snipaste_2018-12-16_11-57-10" width="526" height="908" />
+
+显示已连接，则至此，Gadgetbridge端配置完毕。
+
+请确定没有任何遗漏或者错误操作，这是刷环前的基础，请务必检查无问题后再进行下一步操作！
+
+<hr />
+
+## 三、给手环刷入RES
+1.将资源包下载到安卓设备中，然后使用Gadgetbridge打开。（博主此处使用QQ自带的文件传输助手演示）
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/8278417973c473504698144da09ec155.png" alt="Snipaste_2018-12-16_11-46-18" width="401" height="551" />
+
+确认为刷入的res无误之后，使用Gadgetbridge打开。
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/d6693163743bb4037ac885d8d1c63760.png" alt="Snipaste_2018-12-16_11-49-19" width="436" height="632" />
+
+2.刷入res。
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/7189463dce2bdb28ce58c31a6a3a3f92.png" alt="Snipaste_2018-12-16_11-58-29" width="528" height="832" />
+
+提示你是否开始刷环
+注意，请确保你的手环蓝牙连接且文件无误
+选择开始后手环开始刷环
+期间请不要退出软件或者断开连接
+否则会造成不可预知的后果！
+待刷环完成后，手环会短时间内无法打开
+稍等即可，到时候你就会见到新表盘
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/45e101ea611a485bf0364c12e6c589f9.png" alt="Snipaste_2018-12-16_11-59-57" width="470" height="826" />
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/d6d4bed476f51048842ab6e1cf995ef2.png" alt="Snipaste_2018-12-16_12-00-30" width="346" height="636" />
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/b148ef810a8c00d4b6c3a1036200471e.png" alt="Snipaste_2018-12-16_12-00-53" width="329" height="585" />
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/311313e9081726df5c0060dea5509f70.png" alt="Snipaste_2018-12-16_12-01-11" width="301" height="521" />
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/28c20f3f29921435aa40749019f8f8e8.png" alt="Snipaste_2018-12-16_12-01-31" width="328" height="554" />
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/9dc561d43c97f79d6a5f76e08bd8513c.png" alt="Snipaste_2018-12-16_12-02-17" width="357" height="583" />
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/dcd5552fafd26d172b227224092cf424.png" alt="Snipaste_2018-12-16_12-03-09" width="136" height="290" />
+
+<hr />
+
+四、恢复绑定到小米运动
+
+如果你觉得刷入的res不错，不需要再刷了，那么就可以重新绑定小米运动正常使用了！
+
+方法很简单，解绑Gadgetbridge中的绑定，然后打开小米运动，添加设备，点击手环，然后绑定。然后为了提高续航，把蓝牙广播关闭即可！
+
+运动数据会丢失，但是配置不会！
+
+如果下次需要再刷入的话，需要重复以上所有步骤（即需要开启蓝牙广播解绑小米运动然后绑定Gadgetbridge）！
+
+<hr />
+
+## 补更：修改RES资源(含替换二维码教程)
+其实也很简单，只要会p图，什么图案都是可以修改的。
+
+一、自定义修改res
+
+非常简单。打开米环模拟器，将res文件托进去，模拟器就会自动解包，然后在解包的文件夹里面有一张张图片，自己p上去，确保图片是黑白色，大小不变。
+
+修改好之后，把文件夹托进米环模拟器，程序就会自动打包成res，然后发送到手机里面就可以刷了。
+
+二、使用米环模拟器方便地修改二维码
+
+不多说，放图。<img  src="https://oss.192168123.xyz/image/old-fxblog-img/59404dfdc1b0e05baa723a80050a3c9e.gif" alt="米环模拟器1.7功能" width="907" height="627" />
+
+&nbsp;
+
+<hr />
+
+## 可能遇到的问题
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/f74c73e3299b02d9e2a99717ad1a7f10.png" alt="Snipaste_2018-12-16_12-14-46" width="143" height="264" />
+
+出现这个，一般是刷的res不对应固件，或者res有毒2333或者各种原因///。
+
+不过不需要紧张，这个是还没有成砖，可以重新刷入或者找另外一个正常的res或者官方的res重新刷入即可！
+
+<hr />
+
+至此，教程完毕，开始体验你的个性化米环3吧！！

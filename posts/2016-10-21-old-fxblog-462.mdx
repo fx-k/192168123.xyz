@@ -1,0 +1,97 @@
+---
+title: "wordpress换域名的全过程（解决无法进入后台、图片无法显示等问题）"
+date: '2016-10-21T18:50:10Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2016-10-22T09:33:26Z'
+raw_comment_count: '2'
+image: https://oss.192168123.xyz/image/old-fxblog-img/cover/a5702dc8df27fca8ec6906e8a7683871.png
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=462](https://blog.fxit.top/?p=462)
+:::
+
+博主最近打算换空间，可是当博主把数据转移到其他空间测试时，发现给的测试域名居然无法进入后台！
+
+于是博主找了挺多的办法，很多办法其实都是不行的，所以博主在这里给大家统一一下遇到这种问题的解决办法（因为是博主亲身经历，所以教程绝对是有效的，但不保证全部适用）
+
+<hr />
+
+首先，大家遇到这种问题应该先分析一下错误出在哪里了。
+
+一般wordpress更换新域名，是无法进入后台的，而且图片外链也会失效，这种原因是因为你wordpress绑定的是以前的域名，所以图片外链等都是你以前域名所指向的图片外链，如果你换域名了而之前的域名取消解析，那么你就会出现这种状况。
+
+那么现在首要的就是要进入网站的后台（连后台都进不去玩个xx）
+
+<hr />
+
+首先有一种最简单的方法：
+
+【方法一】
+
+把你以前的域名解析到你的wordpress所在的服务器，然后用你以前的域名登录后台，如你以前的域名是abc.com要换成abc.cn
+
+那么你需要把abc.com解析到服务器，然后用abc.com进入到后台（地址不用我说吧），然后找到设置-常规，如图
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/7c17e63767eb718ffba98ef48ef18a31.png" alt="2016-10-21_180917" width="83" height="300" />
+
+然后找到“WordPress地址（URL）”和“站点地址（URL）”改成你的新域名（如abc.cn），如图
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/ac3bbb2e114b8ec1c2e50d97d0866e16.png" alt="20161021181310" width="300" height="222" />
+
+<hr />
+
+如果你原来的域名已经到期回收了，那怎么办？？？难道还要续费吗？——当然不是，不过有点麻烦
+
+【方法二】
+
+首先打开你的mysql数据库（我这里拿phpmyadmin旧版的给大家演示，用其他的类似，大家自己看着办），点击你的数据库（不知道你的数据库是什么的请打开wordpress目录的wp_config.php 查看，我不详细讲了），如图：
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/70842e01484825a3962e5689735c9cd4.png" alt="20161021181830" width="300" height="235" />
+
+找到你的“wp_options”这个表（如果没有更改前缀都是wp_开头，像博主更改了前缀的就不一样，总之大家自己找到options结尾的表即可），如图
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/884ca5800e0286137dc5461811549e59.png" alt="20161021182421" width="300" height="284" />
+
+点击浏览（就是我箭头指的小框框），然后找到“siteurl”和“home”（位置可能不一样，大家仔细找找，一定有的），然后点击编辑把域名改成你的新域名，然后点执行即可，这样的操作分别进行两次，把“siteurl”和“home”的域名分别改成你的新域名即可，如图
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/e7e87daeb3917813f35bfe02eadb963a.png" alt="20161021182725" width="300" height="215" />
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/bfd2ea37275c2bc673eba214dd15d9da.png" alt="20161021183038" width="300" height="179" />
+
+<hr />
+
+下面就是修改wordpress里面的图片外链、文章链接等的时候了，我们这里采用的思路是：进去mysql使用sql语句进行批量替换即可。
+
+首先打开你的mysql数据库（我这里拿phpmyadmin旧版的给大家演示，用其他的类似，大家自己看着办），点击你的数据库（不知道你的数据库是什么的请打开wordpress目录的wp_config.php 查看，我不详细讲了），如图：
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/70842e01484825a3962e5689735c9cd4.png" alt="20161021181830" width="300" height="235" />
+
+找到你的“wp_posts”这个表（如果没有更改前缀都是wp_开头，像博主更改了前缀的就不一样，总之大家自己找到posts结尾的表即可），点击浏览，如图
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/9050ed39cf389613154bd4714f6f2492.png" alt="20161021183409" width="300" height="268" />
+
+然后点击上面的“sql”按钮，输入以下sql语句，如图（这里假设旧域名为abc.com，新域名为abc.cn）：
+```sql
+UPDATE wp_posts SET post_content = replace(post_content, '旧域名', '新域名');
+UPDATE wp_posts SET guid = replace( guid, '旧域名' , '新域名' ) ;
+```
+
+<img  src="https://oss.192168123.xyz/image/old-fxblog-img/697270cf63e491cda98f9d37567416d1.png" alt="20161021183917" width="300" height="119" />
+这里注意：
+1.如果你改了数据库表的前缀，那么你就要把代码里的"
+wp_posts"替换成你的自定义前缀，如“xxx_posts”
+2.域名不需要带前缀。
+
+然后点击执行即可完成替换操作，博主是没有遇到失败现象，如果失败可能是你的语句复制错误了，或者你的数据库的表名打错，或者是你的旧域名打错。
+
+PS：这个语句替换可以运用到很多方面
+
+<hr />
+
+好了，教程就到此为止了（转眼已是一小时多），希望大家能喜欢博主的文章，多多关注繁星博客~~~
+
+
+

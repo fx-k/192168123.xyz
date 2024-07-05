@@ -1,0 +1,25 @@
+---
+title: "[MySQL]The used table type doesn't support FULLTEXT indexes解决办法"
+date: '2020-02-19T12:30:07Z'
+tags:
+  - 旧博客内容
+  - 技术向
+updatedOn: '2020-02-19T12:30:07Z'
+raw_comment_count: '2'
+---
+
+:::tip
+本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=1066](https://blog.fxit.top/?p=1066)
+:::
+
+昨天在给图床迁移数据库的时候遇到了个问题。
+
+将原来的数据库sql导出，然后导入到其他数据库，提示：The used table type doesn't support FULLTEXT indexes
+
+·报错原因：
+
+InnoDB不支持FULLTEXT类型的索引。
+
+而我原来的数据库mysql.ini中设置的默认引擎是InnoDB（default-storage-engine=InnoDB），而导入目标数据库的引擎是MyISAM（面板用习惯了，都没注意这个问题2333）...
+
+解决办法：将导出的SQL文件编辑，将ENGINE=InnoDB全部替换成ENGINE=MyISAM即可
