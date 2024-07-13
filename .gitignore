@@ -51,3 +51,4 @@ posts/tmp
 src/post-helpers
 public/images/*
 !public/images/test-hero-image.webp
+.obsidian
