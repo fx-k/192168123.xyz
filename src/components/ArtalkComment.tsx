@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import 'artalk/dist/Artalk.css';
 import Artalk from 'artalk';
 import { useTheme } from "next-themes";
+import config from 'config'
 
 const ArtalkComment = () => {
   const container = useRef<HTMLDivElement>(null);
@@ -17,7 +18,7 @@ const ArtalkComment = () => {
       el: container.current!,
       pageKey: pathname,
       pageTitle: document.title,
-      server: 'https://cmt.192168123.xyz',
+      server: config.artalkServer,
       site: '小可の聚集地',
       darkMode: isDarkMode,
       // ...

@@ -13,6 +13,7 @@ module.exports = {
   siteUrl: 'https://192168123.xyz',
   // icon 请在 src/components/Profile.tsx 中修改
   getFaviconAPI: 'https://api.vwood.xyz/v1/Favicon/public?domain=',
+  artalkServer: 'https://cmt.192168123.xyz',
   links: [
     { name: 'GitHub', link: 'https://github.com/fx-k' },
     { name: 'Telegram', link: 'https://t.me/Mone_J' },
