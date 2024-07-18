@@ -6,6 +6,9 @@
 
 👀 [在线预览](https://192168123.xyz/)
 
+![GitHub last commit](https://img.shields.io/github/last-commit/fx-k/192168123.xyz)  ![Vercel Deploy](https://deploy-badge.vercel.app/vercel/192168123-xyz)
+
+
 ## 特色
 
 - 🎨 简洁、丝滑、快速、一键暗黑模式
