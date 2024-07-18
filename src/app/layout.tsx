@@ -45,7 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link
           rel="stylesheet"
-          href="/katex.min.css"
+          href="https://cdn.bootcdn.net/ajax/libs/KaTeX/0.16.8/katex.min.css" //katex@0.16.8
           integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn"
           crossOrigin="anonymous"
         />
