@@ -19,7 +19,7 @@ const ArtalkComment = () => {
       pageKey: pathname,
       pageTitle: document.title,
       server: config.artalkServer,
-      site: '小可の聚集地',
+      site: config.title,
       darkMode: isDarkMode,
       // ...
     });
