@@ -1,0 +1,129 @@
+---
+title: macOS安装R语言教程，配合VsCode、Homebrew正确食用
+date: 2024-09-23T14:40:00Z
+tags:
+  - 技术向
+updatedOn: 2024-09-23T19:24:48Z
+image: https://oss.192168123.xyz/image/2024/09/3118c35a1b263e092f1ddbe871f35371.png
+draft: false
+
+FilePath: /192168123.xyz/posts/2024-09-23-new-1.mdx
+Author: fx-k admin@fxit.top
+LastEditors: fx-k admin@fxit.top
+---
+## 前言
+
+浅浅记录一下R语言的安装教程...😴
+
+## 准备
+
+在安装前，请确保安装好：
+
+- VsCode
+- Homebrew
+- Python或其他，用于安装Radian
+
+在此基础上，本文会安装：
+
+- VsCode插件
+  - `R`（`R LSP Client` 已被整合，不用单独安装）
+  - `R tools`
+  - `R Debugger`
+- Homebrew
+  - `R`（R语言本体）
+  - `pipx`（自动创建虚拟环境，用于安装Radian）
+- R包
+  - `languageserver`（用于提供LSP支持，可以在VsCode中获得代码提示语法检查啥的）
+- Python
+  - `Radian`（`R`的控制台，能有多行编辑和语法高亮等功能）
+
+## 安装
+
+### VsCode插件
+
+安装 `R` 和 `R tools`，以及 `R Debugger`。
+
+### 使用homebrew安装R
+
+终端执行命令：`brew install r`。
+
+![](https://oss.192168123.xyz/image/2024/09/d6bed36e847f36aa86e58a31d698a92c.png)
+
+安装好后，执行 `R --version`，如果没问题可以看到正常显示版本信息。
+
+![](https://oss.192168123.xyz/image/2024/09/de36491c62ede240ce41f0fd06fba14a.png)
+
+### 使用homebrew安装pipx
+
+> pipx 是一个 Python 工具，用于隔离并运行 Python 命令行应用程序。它可以帮助你在不干扰系统环境的情况下安装并运行 Python 包，并自动为每个应用创建虚拟环境。与 pip 不同，pipx 更加专注于命令行工具的管理，而不仅仅是库的安装。
+
+由于homebrew和python同时存在，我们需要创建个虚拟环境，用于安装radian，防止冲突。
+
+也是一句命令：`brew install pipx`。
+
+### 在R内安装R包
+
+在终端输入 `R`进入R环境。
+
+输入 `install.packages("languageserver")`安装 `languageserver`。
+
+输入后会让你选择mirror源，我选了18号香港源，回车然后就开始安装了。
+
+### 使用pipx安装Radian
+
+终端输入 `pipx install radian`，正常安装完成。
+
+然后需要退出终端，重新进入shell。
+
+重新进入shell后，输入命令 `radian`，可以检测到已经正常安装！
+
+![](https://oss.192168123.xyz/image/2024/09/ac30de2965a193d0ec668e5be87ba8b7.png)
+
+## 配置VsCode
+
+### 配置R
+
+按 `cmd + ,`打开VsCode设置，然后在查找框输入 `r.rpath`。
+
+`Mac`地方输入自己的R路径（可以在终端使用 `where R`获得）。
+
+### 配置Radian
+
+按 `cmd + ,`打开VsCode设置，然后在查找框输入 `r.rterm`。
+
+在 `Mac`地方输入自己的radian路径（可以在终端使用 `where radian`获得）。
+
+然后在下面的 `Option`，将原来的 `--no-save`,`–no-restore`删掉。
+
+![](https://oss.192168123.xyz/image/2024/09/c5a67ab1c417edb73da5f948a0372951.png)
+
+接着搜索 `r.br`，建议启用 `Bracketed Paste`。
+
+## 测试环境是否正常
+
+如图，随便打开个R项目，点击VsCode的三角形运行按钮，可以发现运行成功。
+
+测试代码：
+
+```R
+add <- function(x, y) {
+    x + y
+}
+
+print(add(1, 2))
+print(add(1.0e10, 2.0e10))
+print(paste("one", NULL))
+print(paste(NA, "two"))
+print(paste("multi-line", "multi-line"))
+
+
+h <- c(1, 2, 3, 4, 5, 6)
+M <- c("A", "B", "C", "D", "E", "F")
+barplot(h,
+    names.arg = M, xlab = "X", ylab = "Y",
+    col = "#00cec9", main = "Chart", border = "#fdcb6e"
+)
+
+```
+
+![](https://oss.192168123.xyz/image/2024/09/ec3f69bac3c1adf5b76dac0c3dc9404a.png)
