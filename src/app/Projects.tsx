@@ -14,6 +14,16 @@ const projects = [
     desc: "Fancy World - 一个创立于2014年的MCPE(BE)公益服务器!",
     url: 'https://mc.fxit.top',
   },
+  {
+    name: 'FXCloud - 私有云',
+    desc: "233456.xyz, 一个对外分享的私有云平台。",
+    url: 'https://233456.xyz',
+  },
+  {
+    name: 'Server Status - 探针',
+    desc: "古人云，有朋自远方来，以针会友～",
+    url: 'https://dash.status.192168123.xyz',
+  },
 ]
 
 const Projects = () => {
