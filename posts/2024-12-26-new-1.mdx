@@ -1,0 +1,120 @@
+---
+title: Docker也要搭上IPv6快车——三种情况下的Docker IPv6配置
+date: 2024-12-26T17:21:27Z
+tags:
+  - 技术向
+updatedOn: 2024-12-26T17:32:17Z
+image: https://oss.192168123.xyz/image/2024/12/c9770b647b9be3be21be9a2b693b5ee5.png
+draft: false
+
+FilePath: /192168123.xyz/posts/2024-12-26-new-1.mdx
+Author: fx-k admin@fxit.top
+LastEditors: fx-k admin@fxit.top
+---
+
+## 前言
+
+现在的家用网络大部分启用了ipv6并在一定程度上分配了公网的ipv6地址，许多服务商，比如腾讯的轻量服务器，也已经开启了ipv6的内测活动。
+
+很多情况下，我们想要为docker的容器也适配上ipv6网络，可能是服务器，又或是NAS，它帮助我们更好地为不同的服务间建立点对点的链接。
+
+## 情况1：使用host网络
+
+最最最简单的，直接使用host网络，也就是指定`--net=host`。
+
+这样情况下，只要宿主机正常使用ipv6网络，容器内它就是通的。
+
+## 情况2：为默认的bridge网络启用ipv6
+
+为默认的bridge网络设定ipv6之后，所有通过`--net=bridge`（当然大部分不会指定这个参数，因为bridge就是默认的网络）将启用ipv6。也就是我们常用的情况——当你直接使用`docker run`运行，然后使用`-p`映射指定端口的情况。
+
+如果是上述所说的情况，使用下面的配置，为默认的bridge网络启用ipv6即可。
+
+编辑Docker配置文件
+
+`nano /etc/docker/daemon.json`
+
+```json
+{
+   "ipv6": true,
+   "fixed-cidr-v6": "2001:db8:1::/64", // 可以自己定义ipv6子网前缀
+   "ip6tables": true,
+   "experimental": true // 必须得true...之前踩坑了因为没开这个
+}
+```
+
+然后重启服务即可：`sudo systemctl restart docker`
+
+## 情况3：使用docker-compose
+
+但是，实际上我们经常使用docker-compose来编排容器，这个时候docker将会为编排的容器创建一个网络并加入，所以这个时候bridge网络中设定的ipv6是不起作用的。
+
+### 巧思妙想的解决办法
+
+诶博主你刚刚说docker-compose会创建一个网络并为编排的容器加入，那我不使用这个特性不就好啦？！
+
+yes，还真是，你可以直接在docker-compose中指定`network_mode: bridge`即可。
+
+巧妙解决！
+
+示例：
+
+```yaml
+services:
+    xxxx:
+        image: xx/xxx
+        container_name: xxx
+        ports:
+           - xxx:xxx 
+        ...
+        network_mode: bridge
+```
+
+### 正常的解决办法
+
+诶，按道理你所谓的编排容器，就是想让容器们在一起的，你却去使用别家的默认bridge，这不合理吧。
+
+官方来讲，**从逻辑上说，编排容器的目标是让多个容器协同工作。而默认的 bridge 网络模式是为单机场景设计的，限制了跨主机通信能力，因此不适合容器编排的需求。**
+
+so，直接为docker-compose的网络也划分个ipv6子网就解决啦～
+
+⚠️注意，这里Google了很多资料，说docker-compose版本3.X不支持ipv6，但博主实测是可以的，so，我觉得可以一试
+
+```yaml
+version: "3.8"
+services:
+  xxx1:
+    container_name: xxx1
+    image: xxx/xxxx1
+    ports:
+      - "2333:6661"
+    ...
+    networks:
+      - ipv6_network
+    depends_on:
+      - xxx2
+  xxx2:
+    container_name: xxx1
+    image: xxx/xxxx2
+    ...
+    networks:
+      - ipv6_network
+networks:
+  ipv6_network:
+    driver: bridge
+    enable_ipv6: true
+    ipam:
+      driver: default
+      config:
+        - subnet: "fd00::4000:0:0:0/66"
+```
+
+当然，很多情况下，我们希望ipv6的子网划分的更为细致一些，我们可以使用这个工具：[IPv6 Subnetting Calculator](https://subnettingpractice.com/ipv6_subnetting.html)，将ipv6地址更精细地划分为n个子网段。
+
+例如上述示例中的`fd00::4000:0:0:0/66`，就是划分后的产物。
+
+诶！合理，使用上述配置，手动指定network并设定ipv6子网，进容器一ping，ipv6是通的，通讯也正常，属于是符合博主完美主义的的best practice，解决！
+
+---
+
+更多参考：https://docs.docker.com/engine/daemon/ipv6/
