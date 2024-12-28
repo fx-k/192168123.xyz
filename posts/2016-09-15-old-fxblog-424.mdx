@@ -13,6 +13,10 @@ image: https://oss.192168123.xyz/image/old-fxblog-img/cover/bb56a06bc8c4465131df
 本文迁移自老博客，原始链接为 [https://blog.fxit.top/?p=424](https://blog.fxit.top/?p=424)
 :::
 
+:::warning
+注意，本文章所包含的资源分享可能已丢失。
+:::
+
 首先，今天中秋节祝大家节日快乐~
 
 本次给大家带来的是【安装配置Shadowsocks Manyuser + SS-Panel】，是配置shadowsocks（简称ss）的多用户（manyuser）的面板配置，从前端到后端都非常全面。
@@ -30,6 +34,7 @@ SS-Panel是由Orvice写的一款配合ShadowsocksManyuser的前端程序。这�
 SS-Panel的安装很简单，下载<del>这个ZIP包</del>（由于作者现在在开发V3版本但是还没有完成，所以旧的链接下载的未完成版本不能使用现有的配置方法，请下载SS-Panel V2使用。）然后解压放到Web目录（绑定个域名或者子目录啥的都行，最好是https的，原因不解释），建立一个数据库和一个用户，赋予权限之后，打开解压的目录，将lib/config-simple.php改名成config.php然后修改下配置。必须改的配置是数据库用户、数据库密码、数据库名和本站URL，其他的站点名称之类的看心情修改。签到数值神马的直接参考配置文件中的注释就可以。然后将sql目录中的所有sql文件都导入配置文件中指定的数据库。没有问题的话这个SS-Panel就搭建好可以访问了。管理地址是/admin 默认的用户名、密码是admin 12345678 不知道是作者犯懒还是别的神马原因，admin用户的用户名密码想要修改只能去改数据库。。。不过也不是很麻烦啦。具体方法文章后面再介绍。
 
 前端搭建好了，木有后端支持神马都是白搭。后端搭建的方法略微繁琐但是其实也是很简单的。首先需要安装一些依赖。我用的CentOS，于是直接输入以下代码：
+
 ```bash
 yum -y install python-pip m2crypto
 pip install cymysql
@@ -41,6 +46,7 @@ pip install cymysql
 ```bash
 git clone -b manyuser https://github.com/mengskysama/shadowsocks.git
 ```
+
 之后进入目录shadowsocks/shadowsocks里面，修改Config.py，指定数据库用户、密码、数据库之后就可以咯~运行
 
 
@@ -58,9 +64,11 @@ python server.py
 150706 update: 新版的SS-Panel数据库中不再单独存储Admin用户名和密码，而是和user共用一套用户名和密码。admin这个表中只存了user中作为管理员的user_id，所以想要添加管理员的话就去数据库中增加对应的user_id就可以了。默认ID为1的用户是管理员。
 
 还有一个坑就是如果想用supervisor之类的守护程序来保证ShadowSocksManyuser后端的稳定运行的话，在配置文件的command里面不能只写 python &lt;PATH&gt;/server.py   我一开始就是这么写的，然后发现后端总是连接不上，看了一下Supervisor的日志发现这货直接error然后退出了。。。仔细看了看wiki之后发现command里面要加一个参数才行。。。所以command一行应该变成类似这样
+
 ```
 command = python PATH/server.py -c PATH/config.json
 ```
+
 这样就可以愉快的用Supervisor保证后端持续运行了。config.json里面带一个用户名密码端口，然而不用管它，这个密码和端口连接不上的。如果你要是觉得不保险的话可以把这个也改掉。
 
 有人可能会问，想要配置多节点怎么办？很容易。。。只要mysql里面允许数据库的用户远程登录（建议用一个单独的用户，给比较少的权限），然后然后再配置后端的时候数据库地址填写前端SS-Panel所在的服务器的地址，然后数据库用户名密码什么的和之前的一样就可以了。然后再去SS-Panel配置里面加上这个新节点的名称和地址就可以了。ShadowSocksManyuser会自动去远程数据库中读取用户的端口密码等值。对于同一个用户来说，在所有节点的端口和密码都是相同的。
@@ -71,7 +79,7 @@ command = python PATH/server.py -c PATH/config.json
 
 【SS-Panel V2】下载链接：
 
-长网址（稳定）：[http://cloud.fxit.top/index.php?share/file&amp;user=admin&amp;sid=XNRJHLmZ](http://cloud.fxit.top/index.php?share/file&amp;user=admin&amp;sid=XNRJHLmZ)
+长网址（稳定）：[http://cloud.fxit.top/index.php?share/file&amp;user=admin&amp;sid=XNRJHLmZ](http://cloud.fxit.top/index.php?share/file&user=admin&sid=XNRJHLmZ)
 
 短网址（好记）：[http://dwz.fxit.top/sspanelv2](http://dwz.fxit.top/sspanelv2)
 
@@ -79,7 +87,7 @@ command = python PATH/server.py -c PATH/config.json
 
 【git地址（防止文件失效于是也下载下来了给大家使用）】：
 
-长网址（稳定）：[http://cloud.fxit.top/index.php?share/file&amp;user=admin&amp;sid=qCKJfGoh](http://cloud.fxit.top/index.php?share/file&amp;user=admin&amp;sid=qCKJfGoh)
+长网址（稳定）：[http://cloud.fxit.top/index.php?share/file&amp;user=admin&amp;sid=qCKJfGoh](http://cloud.fxit.top/index.php?share/file&user=admin&sid=qCKJfGoh)
 
 短网址（好记）：[http://dwz.fxit.top/sspanel](http://dwz.fxit.top/sspanel)
 
