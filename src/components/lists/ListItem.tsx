@@ -32,7 +32,7 @@ const ListItem: React.FC<JSX.IntrinsicElements['li']> = props => {
   return (
     <li className={clsx(className, 'mdx-li flex items-start my-4')} {...rest}>
       {getMarker()}
-      <div className="flex-1">{type !== 'tl' ? children : childArr?.slice(2)}</div>
+      <div className="flex-1 overflow-hidden">{type !== 'tl' ? children : childArr?.slice(2)}</div>
     </li>
   )
 }
