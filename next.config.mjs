@@ -29,6 +29,19 @@ const config = {
       },
     ]
   },
+  async headers() {
+    return [
+      {
+        source: '/(.*)', // 应用于所有路径
+        headers: [
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains; preload', // 1年有效期，包含子域名，支持预加载
+          },
+        ],
+      },
+    ]
+  },
 }
 
 export default withPlaiceholder(config)
