@@ -1,0 +1,115 @@
+---
+title: “停止跟踪” —— 我们开发了一个净化分享链接的工具...
+date: 2024-12-30T11:53:37Z
+tags:
+  - 望周知
+  - 技术向
+updatedOn: 2024-12-30T12:56:20Z
+image: https://oss.192168123.xyz/image/2024/12/3335b2ffb85f7b575b8a44bb438d02d1.png
+draft: false
+
+FilePath: /192168123.xyz/posts/2024-12-30-new-1.mdx
+Author: fx-k admin@fxit.top
+LastEditors: fx-k admin@fxit.top
+---
+
+## 前言
+
+在我们使用各种社交App的分享功能的时候，他们通常为我们提供了一个**短链接**。
+
+诶？说的对，为什么都是短链接呢？
+
+让我们以B站为例，我们使用`curl`工具，并设置`--max-redirs`为`0`，即不跟随重定向，让我们看看发生了什么：
+
+![](https://oss.192168123.xyz/image/2024/12/45e6295cf96147ec023bae1f6f2e7359.png)
+
+首先，`b23.tv`是b站的一个短链接，我们通过curl工具，发现其实际上进行了一个302的重定向，目标地址是一个超超超超超级长的链接。
+
+这个链接超级无敌长，因为其中隐含了大量的参数，其中记录了你分享时的各种细节，比如你的用户标识符、分享的客户端版本、分享来源和入口等等。
+
+这也就是为何采用短链接的原因 —— 你也不想在分享给好朋友视频时候，被这一大串链接占满了整个聊天框吧～
+
+## 抵御跟踪
+
+回想一下，是不是有一时刻，你的好朋友突然就刷到了你在小红书刚晒出去的新照片？或是你总是与你的好朋友刷到类似兴趣的帖子...
+
+诶，ta怎么知道我「可能认识的人」的？
+
+这其中得涉及一个叫`推荐算法`的东西，它是一个非常复杂的机制，甚至是掌握在互联网行业大佬手中的命脉。
+
+而分享链接的跟踪，仅仅只是边缘的一环，它甚至不涉及什么复杂的算法，而是仅仅根据链接的分享，与被分享方的node（节点）建立起`Link`，从而更加完善你的「用户画像」，以便在后续的图建模后做出正确的“Link Prediction”。
+
+对此，不少人其实认为这种基于熟人的推荐跟踪机制是一种很冒犯的行为。
+
+可是，要知道，平台从来没有给出什么“隐藏跟踪”的分享链接选项，即使能关闭设置中的推荐功能，却也只能牺牲个人的浏览体验，用户别无选择，只能在大数据时代中被别人“看个精光”。
+
+那么，为了抵御跟踪，你似乎只有选择系统的截图分享这一出路了。
+
+—— 然而，链接中的跟踪参数往往不是必须的，尤其是b站，链接中只要包含bv号即可。而小红书则麻烦一些，它还需要一个名为`xsec_token`的token参数，应该是用于阻挡批量的非法爬取。
+
+## 简单的实现
+
+分析出原理就好办事了，本项目的核心源码也非常简单（简单到博主没有丢GitHub的必要🤦...
+
+不想看源码的也可以直接划到文章末尾获取在线工具～
+
+```python
+def clean_tracked_url(url):
+    """
+    清洗输入的单个 URL。
+    """
+    # 检查是否为允许的域名
+    if not any(keyword in url for keyword in ["b23.tv", "bilibili.com", "xhslink.com"]):
+        return url
+
+    source = url
+
+    # 处理短链接（b23.tv 和 xhslink.com）
+    if "b23.tv" in url or "xhslink.com" in url:
+        try:
+            res = requests.get(url, allow_redirects=False)
+            source = res.headers.get("Location", "undefined")
+        except requests.RequestException as e:
+            print(f"Error during fetch: {e}")
+            source = "undefined"
+
+    # 解析和清洗 URL
+    parsed_url = urlparse(source)
+    query_params = parse_qs(parsed_url.query)
+
+    # 处理小红书的 xsec_token 参数
+    xsec_token = query_params.get("xsec_token", [None])[0]
+    if xsec_token:
+        query_params = {"xsec_token": [xsec_token]}
+    else:
+        query_params = {}
+
+    # 构造清洗后的 URL
+    cleaned_url = urlunparse(
+        (
+            parsed_url.scheme,
+            parsed_url.netloc,
+            parsed_url.path,
+            "",  # params
+            urlencode(query_params, doseq=True),
+            "",  # fragment
+        )
+    )
+    return cleaned_url
+
+```
+
+然后再随便画一个简单的前端，还可以对接上自己的短网址系统。配合docker镜像一写，deploy！一个简单实用的分享链接净化工具就实现了～
+
+## 在线工具链接
+
+为了方便博主自己以及大家的使用，将工具部署在服务器～
+
+诶，对了，刚好有台服务器不知道用来干什么，因为它的硬盘IO速度只有1.2m/s（严重怀疑这家IDC使用tf卡做硬盘😠~~建议严查~~）...不过非常非常便宜，一年才不到35人民币～所以就把这个项目丢上去了（docker-compose从pull到run执行了接近10分钟💦）
+
+所以，该服务器性能非常差，我们不仅不提供任何SLA服务保证，而且还狠狠限制了请求的频次。（对的，主打一个，只要你稍微攻击我，我就会立马502鼠掉hhhh）大家且用且珍惜，不要滥用～（必要时可以自己简单部署一个）
+
+> ⚠️ 请注意: 本网站仅供个人学习使用，一切超额的滥用行为将损害他人的使用权益。此外，本站无SLA保证，请勿将本项目及其短链接作为生产使用。
+
+在线工具链接：https://fwd.pp.ua/clean
+
