@@ -51,7 +51,12 @@ module.exports = {
     {
       name: 'Server Status - 探针',
       desc: "古人云，有朋自远方来，以针会友～",
-      url: 'https://dash.status.192168123.xyz',
+      url: 'https://sys.stat.fxit.top',
+    },
+    {
+      name: 'Service Uptime - 监控',
+      desc: "监控，为了无法监控的价值...",
+      url: 'https://ops.stat.fxit.top',
     },
     {
       name: '停止跟踪 - 净化分享链接',
