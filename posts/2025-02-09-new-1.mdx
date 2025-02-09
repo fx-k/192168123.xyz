@@ -1,0 +1,129 @@
+---
+title: 不使用Rosetta —— Mac M芯片安装Maven及JDK1.8等多版本共存
+date: 2025-02-09T15:30:13Z
+tags:
+  - 技术向
+updatedOn: 2025-02-09T15:51:02Z
+image: https://oss.192168123.xyz/image/2025/02/9a92d2c2616d5d4668f35db390c1ccf6.png
+draft: false
+
+FilePath: /192168123.xyz/posts/2025-02-09-new-1.mdx
+Author: fx-k admin@fxit.top
+LastEditors: fx-k admin@fxit.top
+---
+
+## 前言
+
+最近博主在薅一个jdk1.8的项目，但是本地只安装了jdk17。。。
+
+然后发现网上许多关于jdk1.8的教程都需要安装Rosetta（一个为m芯片的转译软件），博主是无必要坚决不使用Rosetta的。
+
+So...索性从头开始记录mac m芯片（Apple silicon）机器，配置Maven、JDk1.8等版本共存。
+
+## 前置工作
+
+本教程已在下述环境测试通过：
+
+- macOS：Sequoia 15.2
+- CPU：Apple M3
+
+在此之前，请准备：
+
+- Homebrew已安装完成
+
+## 安装JDK
+
+### JDK17
+
+可以很简单地使用下面命令来安装JDK17：
+
+`brew install openjdk@17`
+
+安装好后会出现类似下面的提示：
+
+```bash
+==> openjdk@17
+For the system Java wrappers to find this JDK, symlink it with
+  sudo ln -sfn /usr/local/opt/openjdk@17/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-17.jdk
+
+openjdk@17 is keg-only, which means it was not symlinked into /usr/local,
+because this is an alternate version of another formula.
+
+If you need to have openjdk@17 first in your PATH, run:
+  echo 'export PATH="/usr/local/opt/openjdk@17/bin:$PATH"' >> ~/.zshrc
+
+For compilers to find openjdk@17 you may need to set:
+  export CPPFLAGS="-I/usr/local/opt/openjdk@17/include"
+```
+
+我们重点关注`sudo ln -sfn /usr/local/opt/openjdk@17/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-17.jdk`这行，每个人输出可能有一些不一样，找到类似这行的，复制下来执行它。
+
+然后执行`ls /Library/Java/JavaVirtualMachines`，查看到有`openjdk-17.jdk`，即代表路径已经配置正确。
+
+### JDK1.8
+
+由于homebrew的仓库不提供jdk1.8的Apple silicon版本，所以我们使用zulu的。
+
+使用`brew install --cask zulu@8`即可安装Apple silicon版本的jdk1.8，无需安装Rosetta。
+
+安装完成后，使用`ls /Library/Java/JavaVirtualMachines`，查看到有`zulu-8.jdk`，即代表路径已经配置正确。
+
+### 其他JDK
+
+你可以使用类似上面的两种方法，或者，你也可以很容易地在Google中找到安装其他jdk版本的教程。
+
+比如说，你可以使用`brew install openjdk@版本`或者`brew install --cask zulu@版本`。
+
+## JDK多版本共存
+
+### Shell篇
+
+由于mac的默认shell是zsh，so...我们使用`~/.zshrc`配置文件。
+
+打开mac终端，使用`/usr/libexec/java_home -V`，查看jdk存放的目录。
+
+比如：
+
+```bash
+ke@MoneJMacBook-Air ~ % /usr/libexec/java_home -V
+Matching Java Virtual Machines (2):
+    17.0.13 (arm64) "Homebrew" - "OpenJDK 17.0.13" /opt/homebrew/Cellar/openjdk@17/17.0.13/libexec/openjdk.jdk/Contents/Home
+    1.8.0_442 (arm64) "Azul Systems, Inc." - "Zulu 8.84.0.15" /Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home
+/opt/homebrew/Cellar/openjdk@17/17.0.13/libexec/openjdk.jdk/Contents/Home
+```
+
+这里查看到系统已经正确识别出我安装好了jdk17和jdk1.8。
+
+同理，我们使用`/usr/libexec/java_home -v 17`和`/usr/libexec/java_home -v 1.8`可以动态地获取这两个jdk的路径。
+
+因此，我们可以使用这个特性来设定我们的`~/.zshrc`文件。
+
+编辑`~/.zshrc`，使用`nano ~/.zshrc`：
+
+```bash
+# Java config
+export JDK8_HOME=$(/usr/libexec/java_home -v 1.8)
+export JDK17_HOME=$(/usr/libexec/java_home -v 17)
+alias jdk8="export JAVA_HOME=$JDK8_HOME"
+alias jdk17="export JAVA_HOME=$JDK17_HOME"
+# Setting Default JDK Version
+export JAVA_HOME=$JDK17_HOME
+export PATH=$PATH/bin:$JAVA_HOME
+```
+
+如果有其他的jdk版本，可以参考上述进行修改或者新增。
+
+然后执行`source ~/.zshrc`使配置生效。
+
+然后，我们可以很方便地使用`jdk8`和`jdk17`，轻松地切换不同的jdk版本，如图：
+
+![](https://oss.192168123.xyz/image/2025/02/ff2ae6180bf8374336f941eeba6e420b.png)
+
+## 安装Maven
+
+我们可以很轻松地使用`brew install maven`安装maven。
+
+在安装好后，配合上述的教程，我们使用`jdk8`或者`jdk17`或者你自行设置的alias，就可以很轻松地切换jdk版本。
+
+我们使用`mvn -version`也可以验证，已经匹配上了对应的jdk版本。
+
