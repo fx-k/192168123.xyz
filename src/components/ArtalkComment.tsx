@@ -9,6 +9,7 @@ import config from 'config'
 const ArtalkComment = () => {
   const container = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const cleanPathname = pathname.endsWith('.html') ? pathname.slice(0, -5) : pathname;
   const artalk = useRef<Artalk>();
   const { resolvedTheme, forcedTheme } = useTheme()
   const isDarkMode = resolvedTheme === 'dark' || forcedTheme === 'dark'
@@ -16,7 +17,7 @@ const ArtalkComment = () => {
   useEffect(() => {
     artalk.current = Artalk.init({
       el: container.current!,
-      pageKey: pathname,
+      pageKey: cleanPathname,
       pageTitle: document.title,
       server: config.artalkServer,
       site: config.title,
@@ -27,7 +28,7 @@ const ArtalkComment = () => {
     return () => {
       artalk.current?.destroy();
     };
-  }, [pathname]);
+  }, [cleanPathname]);
 
   useEffect(() => {
     if (artalk.current) {

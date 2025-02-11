@@ -13,7 +13,7 @@ export default async function LatestPosts() {
   return (
     <div className="-mx-3 sm:-mx-4 mt-6">
       {posts.map(post => (
-        <Link key={post.slug} href={`/posts/${post.slug}`}>
+        <Link key={post.slug} href={`/posts/${post.slug}.html`}>
           <article className="group relative flex flex-col p-3 sm:p-4 mt-2 rounded-xl sm:hover:bg-zinc-400/10 transition-colors">
             <span className="text-sm text-zinc-400">
               {dayjs(post.frontmatter.date).format('MMM D, YYYY')}

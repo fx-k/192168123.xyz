@@ -18,7 +18,7 @@ export async function GET() {
     feed.item({
       title: frontmatter.title,
       description: '',
-      url: getSiteUrl(`/posts/${post.slug}`).href,
+      url: getSiteUrl(`/posts/${post.slug}.html`).href,
       date: frontmatter.date,
     })
   }
