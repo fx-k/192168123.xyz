@@ -1,12 +1,12 @@
-# 192168123.xyz
+# keke.su
 
 [English](./README.en.md) • [中文](./README.md)
 
 小可の聚集地，由 Next.js、TypeScript、MDX 和 TailwindCSS 构建。
 
-👀 [在线预览](https://192168123.xyz/)
+👀 [在线预览](https://keke.su/)
 
-![GitHub last commit](https://img.shields.io/github/last-commit/fx-k/192168123.xyz)  ![Vercel Deploy](https://deploy-badge.vercel.app/vercel/192168123-xyz)
+![GitHub last commit](https://img.shields.io/github/last-commit/fx-k/keke.su)  ![Vercel Deploy](https://deploy-badge.vercel.app/vercel/192168123-xyz)
 
 
 ## 特色
@@ -31,7 +31,7 @@
 
 那么，开始：
 
-1. 找个目录，git clone本仓库。`git clone https://github.com/fx-k/192168123.xyz.git`
+1. 找个目录，git clone本仓库。`git clone https://github.com/fx-k/keke.su.git`
 2. 进入目录，安装依赖。`npm install`
 3. 你可以在 `site.config.js` 文件中客制化你的网站。
 4. 为了使用点赞和访问量统计功能，需要注册 [Upstash Redis](https://console.upstash.com/redis) 服务（可以白嫖免费套餐），然后在根目录下创建 `.env` 文件，填入以下信息：

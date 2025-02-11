@@ -1,12 +1,12 @@
-# 192168123.xyz
+# keke.su
 
 [English](./README.en.md) • [中文](./README.md)
 
 小可の聚集地, built with Next.js, TypeScript, MDX, and TailwindCSS.
 
-👀 [Online Preview](https://192168123.xyz/)
+👀 [Online Preview](https://keke.su/)
 
-![GitHub last commit](https://img.shields.io/github/last-commit/fx-k/192168123.xyz)  ![Vercel Deploy](https://deploy-badge.vercel.app/vercel/192168123-xyz)
+![GitHub last commit](https://img.shields.io/github/last-commit/fx-k/keke.su)  ![Vercel Deploy](https://deploy-badge.vercel.app/vercel/192168123-xyz)
 
 ## Features
 
@@ -30,7 +30,7 @@ Before deployment, please ensure the following environment is properly configure
 
 Let's start:
 
-1. Find a directory and clone this repository. `git clone https://github.com/fx-k/192168123.xyz.git`
+1. Find a directory and clone this repository. `git clone https://github.com/fx-k/keke.su.git`
 2. Enter the directory and install dependencies. `npm install`
 3. Customize your site in the `site.config.js` file.
 4. To use the like button and visit counter, register for the [Upstash Redis](https://console.upstash.com/redis) service (free plan available), then create a `.env` file in the root directory with the following content:

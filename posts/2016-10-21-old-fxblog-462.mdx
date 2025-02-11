@@ -6,7 +6,7 @@ tags:
   - 技术向
 updatedOn: '2016-10-22T09:33:26Z'
 raw_comment_count: '2'
-image: https://oss.192168123.xyz/image/old-fxblog-img/cover/a5702dc8df27fca8ec6906e8a7683871.png
+image: https://oss.keke.su/image/old-fxblog-img/cover/a5702dc8df27fca8ec6906e8a7683871.png
 ---
 
 :::tip
@@ -35,11 +35,11 @@ image: https://oss.192168123.xyz/image/old-fxblog-img/cover/a5702dc8df27fca8ec69
 
 那么你需要把abc.com解析到服务器，然后用abc.com进入到后台（地址不用我说吧），然后找到设置-常规，如图
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/7c17e63767eb718ffba98ef48ef18a31.png" alt="2016-10-21_180917" width="83" height="300" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/7c17e63767eb718ffba98ef48ef18a31.png" alt="2016-10-21_180917" width="83" height="300" />
 
 然后找到“WordPress地址（URL）”和“站点地址（URL）”改成你的新域名（如abc.cn），如图
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/ac3bbb2e114b8ec1c2e50d97d0866e16.png" alt="20161021181310" width="300" height="222" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/ac3bbb2e114b8ec1c2e50d97d0866e16.png" alt="20161021181310" width="300" height="222" />
 
 <hr />
 
@@ -49,17 +49,17 @@ image: https://oss.192168123.xyz/image/old-fxblog-img/cover/a5702dc8df27fca8ec69
 
 首先打开你的mysql数据库（我这里拿phpmyadmin旧版的给大家演示，用其他的类似，大家自己看着办），点击你的数据库（不知道你的数据库是什么的请打开wordpress目录的wp_config.php 查看，我不详细讲了），如图：
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/70842e01484825a3962e5689735c9cd4.png" alt="20161021181830" width="300" height="235" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/70842e01484825a3962e5689735c9cd4.png" alt="20161021181830" width="300" height="235" />
 
 找到你的“wp_options”这个表（如果没有更改前缀都是wp_开头，像博主更改了前缀的就不一样，总之大家自己找到options结尾的表即可），如图
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/884ca5800e0286137dc5461811549e59.png" alt="20161021182421" width="300" height="284" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/884ca5800e0286137dc5461811549e59.png" alt="20161021182421" width="300" height="284" />
 
 点击浏览（就是我箭头指的小框框），然后找到“siteurl”和“home”（位置可能不一样，大家仔细找找，一定有的），然后点击编辑把域名改成你的新域名，然后点执行即可，这样的操作分别进行两次，把“siteurl”和“home”的域名分别改成你的新域名即可，如图
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/e7e87daeb3917813f35bfe02eadb963a.png" alt="20161021182725" width="300" height="215" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/e7e87daeb3917813f35bfe02eadb963a.png" alt="20161021182725" width="300" height="215" />
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/bfd2ea37275c2bc673eba214dd15d9da.png" alt="20161021183038" width="300" height="179" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/bfd2ea37275c2bc673eba214dd15d9da.png" alt="20161021183038" width="300" height="179" />
 
 <hr />
 
@@ -67,11 +67,11 @@ image: https://oss.192168123.xyz/image/old-fxblog-img/cover/a5702dc8df27fca8ec69
 
 首先打开你的mysql数据库（我这里拿phpmyadmin旧版的给大家演示，用其他的类似，大家自己看着办），点击你的数据库（不知道你的数据库是什么的请打开wordpress目录的wp_config.php 查看，我不详细讲了），如图：
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/70842e01484825a3962e5689735c9cd4.png" alt="20161021181830" width="300" height="235" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/70842e01484825a3962e5689735c9cd4.png" alt="20161021181830" width="300" height="235" />
 
 找到你的“wp_posts”这个表（如果没有更改前缀都是wp_开头，像博主更改了前缀的就不一样，总之大家自己找到posts结尾的表即可），点击浏览，如图
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/9050ed39cf389613154bd4714f6f2492.png" alt="20161021183409" width="300" height="268" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/9050ed39cf389613154bd4714f6f2492.png" alt="20161021183409" width="300" height="268" />
 
 然后点击上面的“sql”按钮，输入以下sql语句，如图（这里假设旧域名为abc.com，新域名为abc.cn）：
 ```sql
@@ -79,7 +79,7 @@ UPDATE wp_posts SET post_content = replace(post_content, '旧域名', '新域名
 UPDATE wp_posts SET guid = replace( guid, '旧域名' , '新域名' ) ;
 ```
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/697270cf63e491cda98f9d37567416d1.png" alt="20161021183917" width="300" height="119" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/697270cf63e491cda98f9d37567416d1.png" alt="20161021183917" width="300" height="119" />
 这里注意：
 1.如果你改了数据库表的前缀，那么你就要把代码里的"
 wp_posts"替换成你的自定义前缀，如“xxx_posts”

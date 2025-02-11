@@ -8,7 +8,7 @@ const config = {
   },
   images: {
     formats: ['image/avif', 'image/webp'],
-    domains: ['oss.192168123.xyz', 'out.fxit.top', 'favicon-ico.vercel.app'],
+    domains: ['oss.keke.su', 'out.fxit.top', 'favicon-ico.vercel.app'],
   },
   experimental: {
     serverComponentsExternalPackages: ['plaiceholder', 'fetch-site-metadata'],
@@ -26,6 +26,10 @@ const config = {
       {
         source: '/feed',
         destination: '/feed.xml',
+      },
+      {
+        source: '/posts/:id.html',  // 匹配 /posts/123.html
+        destination: '/posts/:id',  // 重写到 /posts/123
       },
     ]
   },

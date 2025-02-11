@@ -6,7 +6,7 @@ tags:
   - 技术向
 updatedOn: '2018-09-16T00:24:44Z'
 raw_comment_count: '0'
-image: https://oss.192168123.xyz/image/old-fxblog-img/cover/c34c88f4a9efb8733822e4b6d1ea0a5a.jpg
+image: https://oss.keke.su/image/old-fxblog-img/cover/c34c88f4a9efb8733822e4b6d1ea0a5a.jpg
 ---
 
 :::tip
@@ -69,29 +69,29 @@ network={
 
 3.打开浏览器，访问你的树莓派的IP地址。在页面按提示设置一下管理员账号密码之类的。
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/0a66213364fba503789298bc8ee95d86.png" width="3358" height="1768" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/0a66213364fba503789298bc8ee95d86.png" width="3358" height="1768" />
 
 4.增加管理用户后，显示下面的登录界面。点击FreePBX Administration那个，然后输入你刚刚的账号密码进入管理系统。
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/4955fd0ca5ee599742825a000a69337f.png" width="3358" height="1858" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/4955fd0ca5ee599742825a000a69337f.png" width="3358" height="1858" />
 
 5.登陆后进行语言和时区设置。
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/e2c0869a5b2a63532df62540d8ae6b67.png" width="1644" height="614" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/e2c0869a5b2a63532df62540d8ae6b67.png" width="1644" height="614" />
 
 6.设置成功后，进入了管理主界面。
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/00c15f829767e60f557c96356df13281.png" width="3358" height="1856" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/00c15f829767e60f557c96356df13281.png" width="3358" height="1856" />
 
 7.点击上方菜单栏，`Application` =&gt; `Extensions` =&gt; `Add Extension` =&gt; `Add New PJSIP Extension。`
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/5f6240d3f399fdf7771d6c5aa93299ad.png" width="660" height="476" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/5f6240d3f399fdf7771d6c5aa93299ad.png" width="660" height="476" />
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/a237146c36574be94a5b80646cc5ceed.png" width="806" height="634" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/a237146c36574be94a5b80646cc5ceed.png" width="806" height="634" />
 
 8.需要填写的项目有 User Extension，DisplayName，Secret，Link to a Default User.
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/d2a1cbd35e0e0d33d3b9c65209cda521.png" width="2132" height="1506" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/d2a1cbd35e0e0d33d3b9c65209cda521.png" width="2132" height="1506" />
 
 其中 <em>User Extension</em> 是你的内线号码，用于呼叫和登陆客户端；
 <em>DisplayName</em> 是用于呼叫时的显示，可选填；
@@ -102,38 +102,38 @@ network={
 
 创建完两个用户后，点击右上角的 <em>Apply Config</em> 使配置生效。
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/efd6577fa8d9f96ea68f62d491b75c92.png" width="3358" height="804" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/efd6577fa8d9f96ea68f62d491b75c92.png" width="3358" height="804" />
 
 9.在 Settings =&gt; Asterisk SIP Settings 页面的 General SIP Settings 标签页下面，External Address 一栏填写你的外网IP或者你的外网域名，这里我填写了我的外网IP。Local Networks 中填写你的树莓派所在的子网。RTP Port Ranges 里，填写 10000 到 10100。这里不要使用 20000，测试来看，如果你只是自己用，设置 10100 很稳定。点击 Submit 保存。
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/393d915c1873ac906d2b695e172d9a4f.png" width="2298" height="1698" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/393d915c1873ac906d2b695e172d9a4f.png" width="2298" height="1698" />
 
 10.切换到 <em>Chan PJSIP Settings</em> 标签页下面，把 <em>tcp</em> 设置为 <em>yes</em>，点击 <em>Submit</em> 保存。
 <em>Asterisk</em> 默认使用的是 <em>UDP</em>，为了能保证手机app在后台运行时，可以及时收到来电提醒，需要开启 <em>tcp</em> 通信。
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/79ab2461e86c86beb0b1eab3332176f3.png" width="1558" height="1710" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/79ab2461e86c86beb0b1eab3332176f3.png" width="1558" height="1710" />
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/dd13ac4dd8737722ee14e0bc6ec5b94e.png" width="1272" height="886" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/dd13ac4dd8737722ee14e0bc6ec5b94e.png" width="1272" height="886" />
 
 11.去自己的路由器上，设置端口映射，需要打开 <em>5060</em> 和 <em>10000-10100</em>（一个通讯过程4个端口，你可以只映射10001,10002,10003,10004，不过建议全映射），可以参考下图。
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/c521ca0f75776494dfa9446942d79339.png" width="1674" height="186" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/c521ca0f75776494dfa9446942d79339.png" width="1674" height="186" />
 
 12.去 http://www.linphone.org/ 下载 <em>Linphone</em> 到你的手机和电脑上，如下图分别用刚才新建立的两个账号登陆两个客户端。
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/052e326976e2703cc6c7f2ceda883ee6.jpg" width="750" height="1334" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/052e326976e2703cc6c7f2ceda883ee6.jpg" width="750" height="1334" />
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/4027011b11268578e3d5896725df08e7.jpg" width="750" height="1334" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/4027011b11268578e3d5896725df08e7.jpg" width="750" height="1334" />
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/472515d90724559604f2270b11550136.jpg" width="750" height="1334" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/472515d90724559604f2270b11550136.jpg" width="750" height="1334" />
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/0bd96d01381e25b2637880686e744f75.png" width="1900" height="1264" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/0bd96d01381e25b2637880686e744f75.png" width="1900" height="1264" />
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/73e18033462461aeed7f9b07aadc9b8c.png" width="1900" height="1264" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/73e18033462461aeed7f9b07aadc9b8c.png" width="1900" height="1264" />
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/27e77ab11b66f2695175a5ce4b35f2cd.png" width="1900" height="1264" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/27e77ab11b66f2695175a5ce4b35f2cd.png" width="1900" height="1264" />
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/eadcc8c109ffd1ceb686a9c1c9ef0162.png" width="1900" height="1264" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/eadcc8c109ffd1ceb686a9c1c9ef0162.png" width="1900" height="1264" />
 
 现在从手机上，拨打 <em>102</em> ，如果以上设置没有问题的话，电脑上就能响铃，接起来，两边听一下，看看有没有什么问题。如果有一方听不到，很可能是端口映射的问题，重新检查下配置。端口映射这里偶尔会有莫名奇妙的问题。
 
@@ -159,7 +159,7 @@ install-dongle
 
 2.输入install-dongle后，会出现一系列引导你配置的提示。
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/bb77992d2fe3034066dd49d06253a9e7.png" width="1660" height="486" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/bb77992d2fe3034066dd49d06253a9e7.png" width="1660" height="486" />
 
 其中①输入你插入 <em>3G</em> 卡托里的手机卡号，②输入你要准备接收短信的邮箱地址，③如果你不想转发短信留空即可。
 
@@ -173,17 +173,17 @@ Enter password for SMS page: 123456
 
 3.回到网页配置界面，依次访问 <em>Connectivity</em> =&gt; <em>Trunks</em> =&gt; <em>Add Trunk</em> =&gt; <em>Add Custom Trunk</em>
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/79ab2461e86c86beb0b1eab3332176f3.png" width="1558" height="1710" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/79ab2461e86c86beb0b1eab3332176f3.png" width="1558" height="1710" />
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/bca0452d09444daa03fd9d99938ccf71.png" width="816" height="786" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/bca0452d09444daa03fd9d99938ccf71.png" width="816" height="786" />
 
 4.在 <em>General</em> 标签页下面，设置一个 <em>Trunk Name</em>，<em>Outbound CallerID</em> 中填写你的手机号
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/a7dfe26b7bd5d62648dcb41e0384e131.png" width="1406" height="636" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/a7dfe26b7bd5d62648dcb41e0384e131.png" width="1406" height="636" />
 
 5.在 <em>custom Settings</em> 中设置 `dongle/dongle0/$OUTNUM$`。
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/add1991c220551868bf01fb4a0b27286.png" width="1636" height="472" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/add1991c220551868bf01fb4a0b27286.png" width="1636" height="472" />
 
 这里如果你只是插了一个 <em>3G Dongle</em>，那么就是默认 <em>dongle0</em>，如果你设备上插了多个设备，你需要在命令行下输入一下命令，查看下所有的 <em>Dongle</em>：
 ```
@@ -198,21 +198,21 @@ dongle0 0 Free 6 5 4 CHN-CUGSM E1750 11.126.10.00.00 359767033517971 46009001980
 
 7.从 <em>Connectivity</em> =&gt; <em>Outbound Routes</em> =&gt; <em>Add Outbound Route</em> 中，在 <em>Route Settings</em> 下面填写一个 <em>Route Name</em>，在 <em>Trunk Sequence for Matched Routes</em> 中选择刚才添加的 <em>Trunk</em>。
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/e92b56258a43bfe5ee91cdb1956dde74.png" width="1806" height="1362" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/e92b56258a43bfe5ee91cdb1956dde74.png" width="1806" height="1362" />
 
 8.切换到 <em>Dial Patterns</em> 标签下，按照下图来配置拨号规则，这里配置的规则是，匹配所有0开头的电话号码，把所有0开头的号码，去除开头的0后，转发到我们设置的那个 <em>Trunk</em> 上，进行呼出操作。
 
 此处建议在设置一个prefix为1，然后下一个框写. 。这样就可以自动将1开头的电话通过卡托进行拨打辣！
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/61ff8219d49d350985e4a1ff590c915d.png" width="1984" height="820" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/61ff8219d49d350985e4a1ff590c915d.png" width="1984" height="820" />
 
 9.点击 <em>Submit</em> 保存配置，点击右上角 <em>Apply Config</em> 使配置生效。生效后，你现在可以用你的 <em>App</em> 进行外呼操作了，只要在要拨打的电话前加拨0，即可完成外拨。
 
 10.在 <em>Connectivity</em> =&gt; <em>Inbound Routes</em> =&gt; <em>Add Inbound Route</em> =&gt; <em>General</em>下，配置 <em>Set Destination</em> ，选择 <em>Extension</em>，从已经添加的 <em>Extension</em> 中，选择一个即可。点击 <em>Submit</em> 保存配置，点击右上角 <em>Apply Config</em> 使配置生效。生效后，你可以拨打你的 <em>3G Dongle</em> 中的手机卡号，如果顺利，你手机上的 <em>App</em> 将会接到这个呼入操作。
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/58c2821a65d262a0deffd7fde9235919.png" width="946" height="348" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/58c2821a65d262a0deffd7fde9235919.png" width="946" height="348" />
 
-<img  src="https://oss.192168123.xyz/image/old-fxblog-img/3792d1c95d4b16ebdfdb019947fdec25.png" width="1640" height="1232" />
+<img  src="https://oss.keke.su/image/old-fxblog-img/3792d1c95d4b16ebdfdb019947fdec25.png" width="1640" height="1232" />
 
 至此，所有基本的安装与配置已经完成。
 
@@ -226,53 +226,53 @@ dongle0 0 Free 6 5 4 CHN-CUGSM E1750 11.126.10.00.00 359767033517971 46009001980
 
 2.选择 <em>internet site; mail is sent and received directly using SMTP</em>
 
-<img src="https://oss.192168123.xyz/image/old-fxblog-img/45a4a17d8c192ffeea41fdaf3401952c.png" alt="e1.png" />
+<img src="https://oss.keke.su/image/old-fxblog-img/45a4a17d8c192ffeea41fdaf3401952c.png" alt="e1.png" />
 
 3.配置你的发信域名
 
-<img src="https://oss.192168123.xyz/image/old-fxblog-img/79fc5ebc608e0102636324259c3528af.png" alt="e2.png" />
+<img src="https://oss.keke.su/image/old-fxblog-img/79fc5ebc608e0102636324259c3528af.png" alt="e2.png" />
 
 4.保持默认值
 
-<img src="https://oss.192168123.xyz/image/old-fxblog-img/cf71ea20276f0d53cfe00696d426da02.png" alt="e3.png" />
+<img src="https://oss.keke.su/image/old-fxblog-img/cf71ea20276f0d53cfe00696d426da02.png" alt="e3.png" />
 <ol>
  	<li>配置为你的发信域名</li>
 </ol>
-<img src="https://oss.192168123.xyz/image/old-fxblog-img/87c5ce500711a3ccf1c030aee696bec1.png" alt="e4.png" />
+<img src="https://oss.keke.su/image/old-fxblog-img/87c5ce500711a3ccf1c030aee696bec1.png" alt="e4.png" />
 
 6.以下几步保持默认值
 
-<img src="https://oss.192168123.xyz/image/old-fxblog-img/279375bb836cc2377108f5d10436f521.png" alt="e5.png" />
+<img src="https://oss.keke.su/image/old-fxblog-img/279375bb836cc2377108f5d10436f521.png" alt="e5.png" />
 
-<img src="https://oss.192168123.xyz/image/old-fxblog-img/99abcebe0bf2cbfad732fe87933e7c73.png" alt="e6.png" />
+<img src="https://oss.keke.su/image/old-fxblog-img/99abcebe0bf2cbfad732fe87933e7c73.png" alt="e6.png" />
 
-<img src="https://oss.192168123.xyz/image/old-fxblog-img/5d52a6c668e94ebf5114976220019cbd.png" alt="e7.png" />
+<img src="https://oss.keke.su/image/old-fxblog-img/5d52a6c668e94ebf5114976220019cbd.png" alt="e7.png" />
 
-<img src="https://oss.192168123.xyz/image/old-fxblog-img/23393812e0b5a843661d47201f30f884.png" alt="e8.png" />
+<img src="https://oss.keke.su/image/old-fxblog-img/23393812e0b5a843661d47201f30f884.png" alt="e8.png" />
 
-<img src="https://oss.192168123.xyz/image/old-fxblog-img/de7735c68de2b087c5d878ba6afe050a.png" alt="e9.png" />
+<img src="https://oss.keke.su/image/old-fxblog-img/de7735c68de2b087c5d878ba6afe050a.png" alt="e9.png" />
 
 7.该步输入 `root`
 
-<img src="https://oss.192168123.xyz/image/old-fxblog-img/83abffbbf93960f4eb414232f0864e27.png" alt="e10.png" />
+<img src="https://oss.keke.su/image/old-fxblog-img/83abffbbf93960f4eb414232f0864e27.png" alt="e10.png" />
 
 8.完成发信配置后，使用 `send_test_email &lt;your_email&gt;` 命令进行发信测试。打开你的邮箱，检查垃圾箱，100%的会被拦截，像我用的腾讯的企业邮，在 <em>自助查询</em> 中可以找到拦截信息，为了收信顺利，把你上面配置的发信域名加入邮箱的域名白名单即可。
 
-<img src="https://oss.192168123.xyz/image/old-fxblog-img/89a7ea8517f01bfa70130f2fdd105edd.png" alt="e11.png" />
+<img src="https://oss.keke.su/image/old-fxblog-img/89a7ea8517f01bfa70130f2fdd105edd.png" alt="e11.png" />
 
 9.用手机给自己 <em>3G Dongle</em> 里的手机卡发条短信，应该很快就能收到邮件了，
 
-<img src="https://oss.192168123.xyz/image/old-fxblog-img/3d02483efe096e3218f18892175d3cf5.png" />
+<img src="https://oss.keke.su/image/old-fxblog-img/3d02483efe096e3218f18892175d3cf5.png" />
 
 10.如果想要发送短信的话，我们可以通过 <em>Web</em> 页面进行，访问 <strong>http://your_raspbx_ip/sms</strong>，会提示你输入密码，这个密码即为你安装 <em>Dongle</em> 扩展的时候输入的那个密码，登陆后如下所示
 
-<img src="https://oss.192168123.xyz/image/old-fxblog-img/060c1134a7323f4c0d22fa1a79d8cfe6.png" />
+<img src="https://oss.keke.su/image/old-fxblog-img/060c1134a7323f4c0d22fa1a79d8cfe6.png" />
 
 <strong>注意：收件人手机号一定要加国号</strong>
 设备安全！！！！！
 先给大家看一个截图，
 
-<img src="https://oss.192168123.xyz/image/old-fxblog-img/6634d462c977a4384fb78090c880d9ef.png" alt="s1.png" />
+<img src="https://oss.keke.su/image/old-fxblog-img/6634d462c977a4384fb78090c880d9ef.png" alt="s1.png" />
 
 这是目前我的设备被暴力破解的情况。
 请一定重视安全问题

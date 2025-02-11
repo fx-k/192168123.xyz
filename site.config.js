@@ -10,10 +10,10 @@ module.exports = {
   ],
   avatar: '/avatar.png',
   logo: '/logo.svg',
-  siteUrl: 'https://192168123.xyz',
+  siteUrl: 'https://keke.su',
   // icon 请在 src/components/Profile.tsx 中修改
   getFaviconAPI: 'https://favicon-ico.vercel.app/?url=',
-  artalkServer: 'https://cmt.192168123.xyz',
+  artalkServer: 'https://cmt.keke.su',
   links: [
     { name: 'GitHub', link: 'https://github.com/fx-k' },
     { name: 'Telegram', link: 'https://t.me/Mone_J' },
@@ -34,9 +34,9 @@ module.exports = {
   ],
   projects: [
     {
-      name: '192168123.xyz',
+      name: 'keke.su',
       desc: "小可の聚集地（本站已开源，帮我点点Star叭 orz）",
-      url: 'https://github.com/fx-k/192168123.xyz',
+      url: 'https://github.com/fx-k/keke.su',
     },
     {
       name: '繁星MC服务器',
