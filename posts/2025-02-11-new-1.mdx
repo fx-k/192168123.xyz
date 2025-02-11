@@ -1,0 +1,115 @@
+---
+title: 记录nezha agent的配置修改过程（密钥、API等）
+date: 2025-02-11T19:42:23Z
+tags:
+  - 技术向
+updatedOn: 2025-02-11T19:49:26Z
+image: https://oss.keke.su/image/2025/02/b475a67efabc2ff9b782294d3779d767.png
+draft: false
+
+FilePath: /192168123.xyz/posts/2025-02-11-new-1.mdx
+Author: fx-k admin@fxit.top
+LastEditors: fx-k admin@fxit.top
+---
+
+## 前言
+
+最近将nezha后端的地址全部换了个域名，命名更加合理了。
+
+但是问题来了，10多台服务器不同的系统需要一个一个去替换api地址，还是有点麻烦的。
+
+所以今天记录一下配置修改过程，以便后续查看。
+
+## Linux agent修改
+
+nezha-agent在Linux中大部分以服务形式运行，因此下面的教程适用于这种情形。
+
+使用如下步骤：
+
+1. 首先，修改之前，先确定你的nezha agent采用systemd方式运行。
+
+   ```bash
+   root@MRCz2-VMdebian:~# systemctl status nezha-agent
+   ● nezha-agent.service - 哪吒探针监控端
+        Loaded: loaded (/etc/systemd/system/nezha-agent.service; enabled; preset: enabled)
+        Active: active (running) since Tue 2025-02-11 16:19:52 HKT; 2h 53min ago
+      Main PID: 1376213 (nezha-agent)
+         Tasks: 17 (limit: 19096)
+        Memory: 19.7M
+           CPU: 3min 15.341s
+        CGroup: /system.slice/nezha-agent.service
+                └─1376213 /opt/nezha/agent/nezha-agent -s abc.abc.com:443 -p WhP3TPnXZd484Eajv9 --tls
+   
+   Feb 11 16:19:52 MRCz2-VMdebian systemd[1]: Started nezha-agent.service - 哪吒探针监控端.
+   ```
+
+   可以看到确实nezha agent注册了服务，记下地址`/etc/systemd/system/nezha-agent.service`。
+
+2. 修改之前先停止服务`sudo systemctl stop nezha-agent.service`
+
+3. 可以选择使用`nano /etc/systemd/system/nezha-agent.service`自行修改里面的配置内容。
+
+   如果你跟博主一样也只是修改个api地址，可以使用如下命令将旧的服务地址进行替换：`sudo sed -i 's/abc\.abc\.com/cde.cde.com/g' /etc/systemd/system/nezha-agent.service`（假设你的旧api地址为`abc.abc.com`，新的地址为`cde.cde.com`，注意原地址在命令中要以`\`转义`.`号）
+
+4. 重新加载并重启服务 `sudo systemctl daemon-reload&&sudo systemctl enable nezha-agent.service&&sudo systemctl start nezha-agent.service`
+
+5. 观察nezha dashboard是否成功接收nezha agent的连接。
+
+## Windows agent修改
+
+windows中的nezha agent大部分也是注册成了系统中的服务运行，如下所示：
+
+![](https://oss.keke.su/image/2025/02/6e51f556cb066fd5a191923636d74113.png)
+
+然后，具体的配置形式是记录在了注册表中，所以我们需要修改注册表。
+
+使用如下步骤：
+
+1. 使用 **管理员权限** 打开`PowerShell`。
+
+2. 修改之前，需要先停止当前nezha agent服务，使用`net stop nezha-agent`。
+
+3. 使用`reg query "HKLM\SYSTEM\CurrentControlSet\Services\nezha-agent" /v ImagePath`命令，查询当前nezha agent的信息，并记录下来。
+
+   比如：
+
+   ```powershell
+   PS C:\Windows\system32> reg query "HKLM\SYSTEM\CurrentControlSet\Services\nezha-agent" /v ImagePath
+   
+   HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\nezha-agent
+       ImagePath    REG_EXPAND_SZ    C:\nezha\nezha-agent.exe -s abc.abc.com:443 -p WhP3TPnXZd484Eajv9 --tls
+   ```
+
+   记下`C:\nezha\nezha-agent.exe -s abc.abc.com:443 -p WhP3TPnXZd484Eajv9 --tls`，然后根据需要修改需要的部分，比如博主将api地址修改为`cde.cde.com`，即：`C:\nezha\nezha-agent.exe -s cde.cde.com:443 -p WhP3TPnXZd484Eajv9 --tls`
+
+4. 使用`reg add`替换注册表的目标项，`reg add "HKLM\SYSTEM\CurrentControlSet\Services\nezha-agent" /v ImagePath /t REG_EXPAND_SZ /d "上一步记下的部分" /f`。比如：`reg add "HKLM\SYSTEM\CurrentControlSet\Services\nezha-agent" /v ImagePath /t REG_EXPAND_SZ /d "C:\nezha\nezha-agent.exe -s cde.cde.com:443 -p WhP3TPnXZd484Eajv9 --tls" /f`
+
+5. 重启服务，使用`net start nezha-agent`。
+
+6. 观察nezha dashboard是否成功接收nezha agent的连接。
+
+## 特别篇：修改Serv00的nezha agent（使用vfhky大佬的保活脚本）
+
+喜欢折腾Serv00主机的朋友，并且使用 [vfhky/serv00_ct8_nezha](https://github.com/vfhky/serv00_ct8_nezha) 大佬的保活脚本的，可以看这篇进行修改。
+
+Serv00是基于FreeBSD系统，vfhky大佬的脚本事实上将nezha agent以`nohup`方式进行运行。
+
+我们可以通过`ps aux | grep nezha`查看到该进程，然后配置是保存在`/home/你的用户id/nezha_app/agent/nezha-agent.sh`中。
+
+使用如下步骤进行配置的修改：
+
+1. 登录Serv00的ssh，先使用`ps aux | grep nezha`，找到进程的pid。
+
+   比如：
+
+   ```bash
+   [abcdefg@s16]:<~/nezha_app/agent>$ ps aux | grep nezha
+   abcdefg 27074  0.0  0.0 729912 19304   -  SN   12:30   0:00.68 /home/abcdefg/nezha_app/agent/nezha-ag
+   abcdefg  5227  0.0  0.0  12888  2084 242  SN+  12:34   0:00.00 grep nezha
+   ```
+
+   记下pid`27074`，然后使用`kill 27074`，或`kill -9 27074`杀掉该进程。然后再次使用`ps aux | grep nezha`检查进程是否还存在。
+
+2. 可以使用`nano ~/nezha_app/agent/nezha-agent.sh`直接修改里面的配置文件。如果你只是更改api地址，可以使用该命令进行替换：`sed -i '' 's/abc\.abc\.com/cde.cde.com/g' ~/nezha_app/agent/nezha-agent.sh`（注意这里有`-i ''`，跟前面的教程不太一样）
+
+3. 替换完成后，等待保活进程自动唤起nezha agent即可（顺带也是测试了一下保活服务是否正常执行了hhh）。
