@@ -11,6 +11,7 @@ module.exports = {
   ],
   avatar: '/avatar.png',
   logo: '/logo.svg',
+  favicon: '/favicon.ico',
   siteUrl: 'https://keke.su',
   // icon 请在 src/components/Profile.tsx 中修改
   getFaviconAPI: 'https://favicon-ico.vercel.app/?url=',

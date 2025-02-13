@@ -61,6 +61,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             })
           }}
         />
+        <link rel="icon" href={config.favicon} />
       </head>
       <body>
         <ReducedMotionDetector />
