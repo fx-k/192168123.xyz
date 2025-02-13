@@ -55,6 +55,12 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       description: config.description,
       images: '/api/og',
     },
+    alternates: {
+      types: {
+        'application/rss+xml': [{ url: 'feed.xml', title: 'RSS Feed' }],
+      },
+      canonical: '/posts/' + slug + '.html',
+    },
   } satisfies Metadata
 }
 
