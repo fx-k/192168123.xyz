@@ -36,6 +36,10 @@ export const metadata: Metadata = {
     types: {
       'application/rss+xml': [{ url: 'feed.xml', title: 'RSS Feed' }],
     },
+    canonical: './',
+  },
+  icons: {
+    icon: config.favicon,
   },
 }
 
@@ -57,11 +61,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "@type": "WebSite",
               "name": config.title,
               "alternateName": config.alternateTitle,
-              "url": config.siteUrl + "/"
+              "url": config.siteUrl
             })
           }}
         />
-        <link rel="icon" href={config.favicon} />
       </head>
       <body>
         <ReducedMotionDetector />
