@@ -49,6 +49,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn"
           crossOrigin="anonymous"
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": config.siteUrl,
+              "@type": "WebSite",
+              "name": config.title,
+              "alternateName": config.alternateTitle,
+              "url": config.siteUrl + "/"
+            })
+          }}
+        />
       </head>
       <body>
         <ReducedMotionDetector />

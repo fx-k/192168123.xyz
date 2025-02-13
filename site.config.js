@@ -1,6 +1,7 @@
 module.exports = {
   name: 'Mr.Ke',
   title: '小可の聚集地', // 更改title将会影响artalkServer对应的配置
+  alternateTitle: '小可的博客', // 更改title和alternateTitle将会影响Google站点的JSON-LD数据
   description: '可可酥，小可之地！！！',
   description_typing: [
     "🌹可以永远期待一切的双向奔赴...",
