@@ -25,6 +25,8 @@ module.exports = {
   friends: [
     { name: '维基萌', link: 'http://www.wikimoe.com/' },
     { name: 'OMG的博客', link: 'https://ohmyga.cn/' },
+    { name: 'HanCanonのBlog', link: 'https://blog.hancanon.com/' },
+    { name: 'Diaoan\'s Blog', link: 'https://diaoan.xyz/' },
   ],
   friends_invalid: [
     { name: '遇见心流', link: 'http://yujianxinliu.com/' },
@@ -33,6 +35,8 @@ module.exports = {
     { name: '树洞', link: 'https://aoaoao.me/' },
     { name: '久伴博客', link: 'https://jiub.ren/' },
     { name: 'Sonic853', link: 'http://blog.853lab.com/' },
+    { name: 'yellowblue', link: 'https://yellowblue.top/' },
+    { name: '光宇核心', link: 'https://starlightness.tech/' },
   ],
   projects: [
     {
