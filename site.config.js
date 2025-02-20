@@ -35,7 +35,7 @@ module.exports = {
     { name: '树洞', link: 'https://aoaoao.me/' },
     { name: '久伴博客', link: 'https://jiub.ren/' },
     { name: 'Sonic853', link: 'http://blog.853lab.com/' },
-    { name: 'yellowblue', link: 'https://yellowblue.top/' },
+    { name: 'YellowBlue', link: 'https://yellowblue.top/' },
     { name: '光宇核心', link: 'https://starlightness.tech/' },
   ],
   projects: [
