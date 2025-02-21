@@ -27,6 +27,7 @@ module.exports = {
     { name: 'OMG的博客', link: 'https://ohmyga.cn/' },
     { name: 'HanCanonのBlog', link: 'https://blog.hancanon.com/' },
     { name: 'Diaoan\'s Blog', link: 'https://diaoan.xyz/' },
+    { name: 'UsubeniFantasy', link: 'https://ssshooter.com/' },
   ],
   friends_invalid: [
     { name: '遇见心流', link: 'http://yujianxinliu.com/' },
