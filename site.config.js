@@ -29,6 +29,7 @@ module.exports = {
     { name: 'Diaoan\'s Blog', link: 'https://diaoan.xyz/' },
     { name: 'UsubeniFantasy', link: 'https://ssshooter.com/' },
     { name: 'Sukka\'s Blog', link: 'https://blog.skk.moe/' },
+    { name: '香菇肥牛的博客', link: 'https://qing.su/' },
   ],
   friends_invalid: [
     { name: '遇见心流', link: 'http://yujianxinliu.com/' },
